@@ -1,0 +1,9 @@
+<?
+	session_start();
+	$domain=$_SESSION["domain"];
+	session_unset();
+    session_destroy();
+?>
+<script>
+	parent.location.href="<?=$domain;?>/";
+</script>

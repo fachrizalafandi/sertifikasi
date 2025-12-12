@@ -1,0 +1,17 @@
+RewriteEngine on
+RewriteBase /project/lsp-ipi/sertifikasi/
+
+RewriteRule ^error$ mod-404.php
+RewriteRule ^login$ mod-login-cek.php
+RewriteRule ^logout$ mod-logout.php
+RewriteRule ^form$ mod-form.php
+RewriteRule ^list$ mod-list.php
+RewriteRule ^proses$ mod-proses.php
+RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?mod=$1
+RewriteRule ^([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)$ index.php?mod=$1&sub=$2
+
+RewriteRule ^(.+)/(css|img|js|vendor|data)/(.*)/(.*)$ $2/$3/$4 [L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L]
