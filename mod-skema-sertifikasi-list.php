@@ -253,8 +253,7 @@
             $keyword="and (s.skema LIKE '%$search%' or k.nomor LIKE '%$search%' or k.klaster LIKE '%$search%')";
         }
 
-        $query = mysqli_query($conn,"SELECT s.skema,k.* FROM sk_skema s, sk_skema_klaster k WHERE s.id=k.id_skema_sertifikasi and s.id_lsp='".$_SESSION["id_lsp"]."' and k.klaster='Skema Klaster Teknisi Laboratorium Industri' ".$keyword." order by $order $dir LIMIT $limit OFFSET $start");
-        // $query = mysqli_query($conn,"SELECT s.skema,k.* FROM sk_skema s, sk_skema_klaster k WHERE s.id=k.id_skema_sertifikasi and s.id_lsp='".$_SESSION["id_lsp"]."' ".$keyword." order by $order $dir LIMIT $limit OFFSET $start");
+        $query = mysqli_query($conn,"SELECT s.skema,k.* FROM sk_skema s, sk_skema_klaster k WHERE s.id=k.id_skema_sertifikasi and s.id_lsp='".$_SESSION["id_lsp"]."' ".$keyword." order by $order $dir LIMIT $limit OFFSET $start");
         $qcount = mysqli_query($conn,"SELECT count(k.id) as jumlah FROM sk_skema s, sk_skema_klaster k WHERE s.id=k.id_skema_sertifikasi and id_lsp='".$_SESSION["id_lsp"]."' ".$keyword."");
 
         $datacount = mysqli_fetch_array($qcount);

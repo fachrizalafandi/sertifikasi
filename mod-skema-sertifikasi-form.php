@@ -607,12 +607,6 @@
                     loadUkDetail($(this).val());
                 });
 
-                // auto load UK pertama (jika ada)
-                const firstUk = $('#select-uk').val();
-                if (firstUk) {
-                    loadUkDetail(firstUk);
-                }
-
             });
             </script>
 
