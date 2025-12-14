@@ -509,7 +509,113 @@
         else
         {
     ?>
-        detail
+        <div class="form-group">
+            Unit Kompetensi
+        </div>
+        <div class="form-group">
+            <? $id_uk_selected = intval($_GET['id_uk'] ?? 0); ?>
+            <select class='form-control' name='id_uk' id="select-uk" required>
+                <option value=''>PILIH</option>
+                <?
+                    $q_uk = mysqli_query($conn,"select * from sk_skema_uk where id_klaster='".$data["id"]."'");
+                    while($uk = mysqli_fetch_assoc($q_uk))
+                    {
+                ?>
+                <option value='<?=$uk["id"];?>' <? if ($uk["id"] == $id_uk_selected) echo "selected"; ?>><?=$uk["kode"];?> - <?=$uk["unit_kompetensi"];?></option>
+                <?
+                    }
+                ?>
+            </select>
+        </div>
+        <div id="elemen-wrapper">
+
+        </div>
+        <script>
+            $(document).ready(function () {
+
+                const $selectUk = $('#select-uk');
+
+                // cari option pertama yang punya value (bukan "")
+                const firstUkOption = $selectUk.find('option[value!=""]').first();
+
+                if (firstUkOption.length) {
+                    const firstUkValue = firstUkOption.val();
+
+                    $selectUk.val(firstUkValue);      // set ke UK pertama
+                    loadUkDetail(firstUkValue);        // load datanya
+                }
+
+                function loadUkDetail(idUk) {
+                    if (!idUk) {
+                        $('#elemen-wrapper').html('<i>Silakan pilih Unit Kompetensi</i>');
+                        return;
+                    }
+
+                    $('#elemen-wrapper').html('<i>Memuat data...</i>');
+
+                    $.ajax({
+                        url: "<?= $_SESSION['domain']; ?>/proses"
+                            + "?mod=<?= $mod; ?>"
+                            + "&sub=<?= $sub; ?>"
+                            + "&act=load&id_uk=" + idUk,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (res) {
+                            renderElemenDetail(res);
+                        },
+                        error: function (xhr) {
+                            console.log(xhr.responseText);
+                            $('#elemen-wrapper').html('<span class="text-danger">Gagal memuat data</span>');
+                        }
+                    });
+                }
+
+                function renderElemenDetail(data) {
+                    let html = '';
+                    let i = 0;
+
+                    if (Object.keys(data).length === 0) {
+                        html = '<i>Belum ada Elemen & KUK</i>';
+                    } else {
+                        $.each(data, function (elemen, kuks) {
+                            i++;
+
+                            html += `
+                                <div style="border:1px solid #DEDCDC;padding:15px;border-radius:5px;margin-bottom:15px;">
+                                    <strong>Elemen ${i} :</strong>
+                                    <div class="mb-2">${elemen}</div>
+                                    <strong>Kriteria Unjuk Kerja:</strong>
+                                    <ol class="mt-2">
+                            `;
+
+                            kuks.forEach(function (kuk) {
+                                html += `<li>${kuk}</li>`;
+                            });
+
+                            html += `
+                                    </ol>
+                                </div>
+                            `;
+                        });
+                    }
+
+                    $('#elemen-wrapper').html(html);
+                }
+
+                // ketika UK diganti
+                $('#select-uk').on('change', function () {
+                    loadUkDetail($(this).val());
+                });
+
+                // auto load UK pertama (jika ada)
+                const firstUk = $('#select-uk').val();
+                if (firstUk) {
+                    loadUkDetail(firstUk);
+                }
+
+            });
+            </script>
+
     <?
         }
     ?>
