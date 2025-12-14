@@ -145,4 +145,85 @@
         <?
       }
   }
+  elseif ($sub == 'elemen-kuk') 
+  {
+    $query = mysqli_query($conn,"SELECT * from sk_skema_klaster where sha='".$sha."'");
+    $data = mysqli_fetch_assoc($query);
+
+    if ($act == "add") 
+    {
+        $id_uk  = intval($_POST['id_uk']);
+
+        $elemen = $_POST['elemen'];
+
+        if ($id_uk == 0 || empty($elemen)) {
+            ?>
+            <script>
+                parent.swal("Error", "Unit Kompetensi dan Elemen wajib diisi", "error");
+            </script>
+            <?php
+            exit;
+        }
+
+        // hapus data lama (1 UK = 1 set elemen-kuk)
+        mysqli_query($conn, "DELETE FROM sk_skema_elemen WHERE id_uk='$id_uk'");
+
+        foreach ($elemen as $eIndex => $eData) {
+
+            if (empty($eData['nama']) || empty($eData['kuk'])) continue;
+
+            $nama_elemen = input($eData['nama']);
+
+            foreach ($eData['kuk'] as $nama_kuk) {
+
+                if (trim($nama_kuk) == "") continue;
+
+                $nama_kuk = input($nama_kuk);
+
+                $angka = substr(md5(microtime()), rand(0,26), 5);
+                $sha   = md5(uniqid($angka, true));
+
+                mysqli_query($conn, "
+                    INSERT INTO sk_skema_elemen 
+                    (id_uk, elemen, kuk, sha)
+                    VALUES 
+                    ('$id_uk', '$nama_elemen', '$nama_kuk', '$sha')
+                ");
+            }
+        }
+        ?>
+        <script>
+            $(document).ready(function(){
+                parent.swal("Sukses","Data Berhasil Disimpan","success");
+                parent.$("#content-modal").load(
+                    "<?= $_SESSION['domain']; ?>/form?mod=<?= $mod; ?>&sub=<?= $sub; ?>&sha=<?= $data['sha']; ?>&id_uk=<?= $id_uk; ?>"
+                );
+            });
+        </script>
+        <?php
+    }
+    elseif($act == "load")
+    {
+       header('Content-Type: application/json; charset=utf-8');
+       ob_clean();
+
+      $id_uk = intval($_GET['id_uk']);
+
+      $q = mysqli_query($conn,"
+          SELECT elemen, kuk
+          FROM sk_skema_elemen
+          WHERE id_uk = '$id_uk'
+          ORDER BY id ASC
+      ");
+
+      $result = [];
+
+      while ($r = mysqli_fetch_assoc($q)) {
+          $result[$r['elemen']][] = $r['kuk'];
+      }
+
+      echo json_encode($result);
+      exit;
+    }
+  }
 ?>
