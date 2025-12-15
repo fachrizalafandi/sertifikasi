@@ -1,4 +1,17 @@
 <?
+if (!empty($_SESSION['profil_warning'])): // session flag diambil dari mod-route.php
+?> 
+<script>
+    swal(
+        "Lengkapi Profil",
+        "Silakan lengkapi data profil sebelum mengisi APL",
+        "info"
+    );
+</script>
+<?
+
+unset($_SESSION['profil_warning']); endif; // hapus session flag setelah ditampilkan
+
     if($sub=="")
     {
         $query = mysqli_query($conn,"SELECT * FROM sr_registrasi where sha='".$_SESSION['sha']."'");

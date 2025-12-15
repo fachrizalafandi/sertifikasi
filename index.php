@@ -122,17 +122,17 @@
                 Sertifikasi
             </div>
             <li class="nav-item">
-                <a class="nav-link" href="<?=$_SESSION['domain'];?>/sertifikasi/registrasi">
+                <a class="nav-link" href="<?=$_SESSION['domain'];?>/registrasi">
                     <i class="fas fa-fw fa-folder"></i>
                 <span>Registrasi</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<?=$_SESSION['domain'];?>/sertifikasi/apl-01">
+                <a class="nav-link" href="<?=$_SESSION['domain'];?>/apl-01">
                     <i class="fas fa-fw fa-folder"></i>
                 <span>Form APL-01</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<?=$_SESSION['domain'];?>/sertifikasi/apl-02">
+                <a class="nav-link" href="<?=$_SESSION['domain'];?>/apl-02">
                     <i class="fas fa-fw fa-folder"></i>
                 <span>Form APL-02</span></a>
             </li>
@@ -149,12 +149,12 @@
             </li>
             <hr class="sidebar-divider">
             <li class="nav-item">
-                <a class="nav-link" href="<?=$_SESSION['domain'];?>/form-apl-01">
+                <a class="nav-link" href="<?=$_SESSION['domain'];?>/apl-01">
                     <i class="fas fa-fw fa-folder"></i>
                 <span>Form APL-01</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="<?=$_SESSION['domain'];?>/form-apl-02">
+                <a class="nav-link" href="<?=$_SESSION['domain'];?>/apl-02">
                     <i class="fas fa-fw fa-folder"></i>
                 <span>Form APL-02</span></a>
             </li>
