@@ -12,10 +12,10 @@
                         <thead>
                             <tr>
                                 <th width='5%'>No.</th>
-                                <th width='10%'>Username</th>
-                                <th width='10%'>Password</th>
-                                <th width='*'>Nama</th>
-                                <th width='15%'>Hak Akses</th>
+                                <th width='20%'>Skema</th>
+                                <th width='20%'>Klaster</th>
+                                <th width='20%'>Tujuan Asesmen</th>
+                                <th width='20%'>Tanggal Pengajuan</th>
                                 <th width='5%'><i class="fas fa-bars fa-sm text-gray-800-50"></i></th>
                             </tr>
                         </thead>
@@ -43,10 +43,10 @@
                     },
                     "columns": [
                         { "data": "no" },
-                        { "data": "username" },
-                        { "data": "password" },
-                        { "data": "nama" },
-                        { "data": "hak_akses" },
+                        { "data": "skema" },
+                        { "data": "klaster" },
+                        { "data": "tujuan_asesmen" },
+                        { "data": "tanggal_pengajuan" },
                         { "data": "action" },
                         ]  
                 });

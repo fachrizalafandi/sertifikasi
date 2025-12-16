@@ -1,74 +1,113 @@
 <?
-    if($sub=="")
-    {
-        $columns = array
-        ( 
-            0 =>'id', 
-            1 =>'username',
-            2=> 'password',
-            3=> 'nama',
-            4=> 'hak_akses',
-            5=> 'id',
-        );
+if ($sub == "") {
 
-        $q_count = mysqli_query($conn,"SELECT count(id) as jumlah FROM m_user_akses where id_lsp='".$_SESSION["id_lsp"]."'");
-        $datacount = mysqli_fetch_array($q_count);
-  
-        $totalData = $datacount["jumlah"];
-        $totalFiltered = $totalData; 
+    $columns = array(
+        0 => 'id',
+        1 => 'skema',
+        2 => 'klaster',
+        3 => 'tujuan_asesmen',
+        4 => 'tgl_pengajuan',
+        5 => 'id'
+    );
 
-        $limit = $_POST['length'];
-        $start = $_POST['start'];
-        $order = $columns[$_POST['order']['0']['column']];
-        if($order=="id")
-        {
-            $order=$columns[3];
-        }
-        $dir = $_POST['order']['0']['dir'];
+    // total data tanpa filter
+    $q_count = mysqli_query($conn, "
+        SELECT COUNT(a.id) AS jumlah
+        FROM sr_apl01 a
+        JOIN sr_registrasi r ON a.id_registrasi = r.id
+        WHERE r.id = '".$_SESSION['id_user']."'
+    ");
 
-        if($_POST['search']['value']<>"")
-        { 
-            $search = $_POST['search']['value'];
-            $keyword="and (nama LIKE '%$search%' or username LIKE '%$search%')";
-        }
+    $datacount     = mysqli_fetch_assoc($q_count);
+    $totalData     = $datacount['jumlah'];
+    $totalFiltered = $totalData;
 
-        $query = mysqli_query($conn,"SELECT * FROM m_user_akses WHERE 1 and id_lsp='".$_SESSION["id_lsp"]."' ".$keyword." order by $order $dir LIMIT $limit OFFSET $start");
-        $qcount = mysqli_query($conn,"SELECT count(id) as jumlah FROM m_user_akses WHERE 1 and id_lsp='".$_SESSION["id_lsp"]."' ".$keyword."");
+    // paging
+    $limit  = $_POST['length'];
+    $start  = $_POST['start'];
+    $order  = $columns[$_POST['order'][0]['column']];
+    $dir    = $_POST['order'][0]['dir'];
 
-        $datacount = mysqli_fetch_array($qcount);
-        $totalFiltered = $datacount["jumlah"];
-
-        $r = array();
-        if($totalFiltered>0)
-        {
-            $no = $start + 1;
-            while ($r = mysqli_fetch_array($query))
-            {
-                $action="<a href='#' data-toggle='dropdown'><i class='fas fa-bars fa-sm text-gray-800-50'></i></a>
-                            <ul class='dropdown-menu'>
-                                <li><a href='#' onclick=edit('".$r["sha"]."')>Edit</a></li>
-                                <li role='seperator' class='dropdown-divider'></li>
-                                <li><a href='#' onclick=del('".$r["sha"]."')>Hapus</a></li>
-                            </ul>";
-
-                $nestedData['no'] = "<center>".number_format($no)."</center>";
-                $nestedData['username'] = "<center>".$r['username']."</center>";
-                $nestedData['password'] = "<center>".$r['password']."</center>";
-                $nestedData['nama'] = $r['nama'];
-                $nestedData['hak_akses'] = "<center>".ucwords(str_replace("_"," ",$r['hak_akses']))."</center>";
-                $nestedData['action'] = "<center>".$action."</center>";
-                $data[] = $nestedData;
-                $no++;
-            }
-        }
-
-        $json_data = array
-        (
-            "draw"            => intval($_POST['draw']),  
-            "recordsTotal"    => intval($totalData),  
-            "recordsFiltered" => intval($totalFiltered), 
-            "data"            => $data   
-        );
-                    
-        echo json_encode($json_data); 
+    $keyword = "";
+    if (!empty($_POST['search']['value'])) {
+        $search = mysqli_real_escape_string($conn, $_POST['search']['value']);
+        $keyword = "
+            AND (
+                s.skema LIKE '%$search%' OR
+                k.klaster LIKE '%$search%'
+            )
+        ";
     }
+
+    // main query dengan filter dan paging
+    $query = mysqli_query($conn, "
+        SELECT 
+            a.id,
+            a.sha,
+            a.tujuan_asesmen,
+            a.tgl_pengajuan,
+            a.status,
+            s.skema,
+            k.klaster
+        FROM sr_apl01 a
+        JOIN sr_registrasi r ON a.id_registrasi = r.id
+        JOIN sk_skema_klaster k ON a.id_klaster = k.id
+        JOIN sk_skema s ON k.id_skema_sertifikasi = s.id
+        WHERE r.id = '".$_SESSION['id_user']."'
+        $keyword
+        ORDER BY $order $dir
+        LIMIT $limit OFFSET $start
+    ");
+
+    // hitung total data setelah difilter
+    $qcount = mysqli_query($conn, "
+        SELECT COUNT(a.id) AS jumlah
+        FROM sr_apl01 a
+        JOIN sr_registrasi r ON a.id_registrasi = r.id
+        JOIN sk_skema_klaster k ON a.id_klaster = k.id
+        JOIN sk_skema s ON k.id_skema_sertifikasi = s.id
+        WHERE r.id = '".$_SESSION['id_user']."'
+        $keyword
+    ");
+
+    $datacount     = mysqli_fetch_assoc($qcount);
+    $totalFiltered = $datacount['jumlah'];
+
+    // prepare data
+    $data = array();
+    $no   = $start + 1;
+
+    while ($row = mysqli_fetch_assoc($query)) {
+
+        // label status (bisa dikembangkan nanti)
+        $status = ucfirst($row['status']);
+
+        $action = "
+            <a href='#'
+               onclick=\"openApl01('".$row['sha']."')\"
+               title='Isi / Detail APL-01'>
+                <i class='fas fa-edit'></i>
+            </a>
+        ";
+
+        $nestedData = array();
+        $nestedData['no']                = "<center>".$no."</center>";
+        $nestedData['skema']             = $row['skema'];
+        $nestedData['klaster']           = $row['klaster'];
+        $nestedData['tujuan_asesmen']            = $row['tujuan_asesmen'];
+        $nestedData['tanggal_pengajuan'] = tgl_indo($row['tgl_pengajuan']);
+        $nestedData['action']            = "<center>$action</center>";
+
+        $data[] = $nestedData;
+        $no++;
+    }
+
+    // output to json format
+    echo json_encode(array(
+        "draw"            => intval($_POST['draw']),
+        "recordsTotal"    => intval($totalData),
+        "recordsFiltered" => intval($totalFiltered),
+        "data"            => $data
+    ));
+}
+?>

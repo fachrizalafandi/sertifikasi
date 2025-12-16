@@ -1,7 +1,7 @@
 /*
  Navicat Premium Dump SQL
 
- Source Server         : mysql localhost
+ Source Server         : localhost mysql
  Source Server Type    : MySQL
  Source Server Version : 80403 (8.4.3)
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 80403 (8.4.3)
  File Encoding         : 65001
 
- Date: 15/12/2025 11:58:46
+ Date: 16/12/2025 23:02:55
 */
 
 SET NAMES utf8mb4;
@@ -348,14 +348,17 @@ CREATE TABLE `sr_apl01`  (
   `id_registrasi` int NULL DEFAULT NULL,
   `tgl_pengajuan` date NULL DEFAULT NULL,
   `id_klaster` int NULL DEFAULT NULL,
-  `tujuan_asessmen` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `tujuan_asesmen` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `sha` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sr_apl01
 -- ----------------------------
+INSERT INTO `sr_apl01` VALUES (1, 3, '2025-12-16', 77, 'Sertifikasi', 'a6a3a2b5d8ef761527e12267f78ea2d7', 'submitted');
+INSERT INTO `sr_apl01` VALUES (2, 3, '2025-12-16', 78, 'Sertifikasi', 'd1b3b4932b2c0402d56f49cf02354494', 'submitted');
 
 -- ----------------------------
 -- Table structure for sr_apl01_bukti
@@ -368,11 +371,14 @@ CREATE TABLE `sr_apl01_bukti`  (
   `file_bukti_persyaratan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `sha` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sr_apl01_bukti
 -- ----------------------------
+INSERT INTO `sr_apl01_bukti` VALUES (1, 1, 'Ijazah SMK', 'b9b0af4cfae7494d24f68ab292f2db12.pdf', 'd1d60374ce6833e43d6c1d1fa6e1db6d');
+INSERT INTO `sr_apl01_bukti` VALUES (2, 1, 'CV', '5ab123f560b2cd90616232537884220e.pdf', 'affa36c4962cdd627065cef184fb2d8c');
+INSERT INTO `sr_apl01_bukti` VALUES (3, 2, 'Ijazah SMK', 'd4c4c4eeeab0759cd20ebf8d1cf299ca.pdf', 'db1d79d7f6dc4667bc7f5a7be6311b6c');
 
 -- ----------------------------
 -- Table structure for sr_registrasi
@@ -409,7 +415,6 @@ CREATE TABLE `sr_registrasi`  (
 -- Records of sr_registrasi
 -- ----------------------------
 INSERT INTO `sr_registrasi` VALUES (1, 1, 'alifikri.mail@gmail.com', '9fe33', 'Ahmad Ali Fikri', '7f3c430716b0e2731edcf6825dcc9074', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `sr_registrasi` VALUES (2, 1, 'fachrizalafandi13@gmail.com', 'edfac', 'Mochammad Fachrizal Afandi', '3a17ac30262246aaf3df717ebecb8a8b', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `sr_registrasi` VALUES (3, 1, 'fachrizalafandi13@gmail.com', 'fe292', 'Mochammad Fachrizal Afandi', 'e6e4a3eeef9d132e826f8c2d306d1818', '3525121303980002', 'Gresik', '1998-03-13', 'laki-laki', 'Indonesia', 'Tanggulrejo Utara No. 31 RT 03 RW 01 Desa Tanggulrejo Kec. Manyar Kab. Gresik', '61151', '085854541938', '', 'S1 Pendidikan Tenik Informatika', 'Dinas Pendidikan Kabupaten Gresik', 'Pengembang Teknologi Pembelajaran Ahli Pertama', 'Jl. Arif Rahman Hakim No. 2 Gresik', '61111', '', '', '');
+INSERT INTO `sr_registrasi` VALUES (3, 1, 'fachrizalafandi13@gmail.com', 'rizal123', 'Mochammad Fachrizal Afandi', 'e6e4a3eeef9d132e826f8c2d306d1818', '3525121303980002', 'Gresik', '1998-03-13', 'laki-laki', 'Indonesia', 'Tanggulrejo Utara No. 31 RT 03 RW 01 Desa Tanggulrejo Kec. Manyar Kab. Gresik', '61151', '085854541938', '', 'S1 Pendidikan Tenik Informatika', 'Dinas Pendidikan Kabupaten Gresik', 'Pengembang Teknologi Pembelajaran Ahli Pertama', 'Jl. Arif Rahman Hakim No. 2 Gresik', '61111', '', '', '');
 
 SET FOREIGN_KEY_CHECKS = 1;
