@@ -54,56 +54,107 @@ if ($sub == "") {
         exit;
     }
     elseif ($act == "add") {
-        $id_registrasi  = intval($_SESSION['id_user']);
-        $id_klaster     = intval($_POST['id_klaster']);
-        $tujuan         = input($_POST['tujuan_asesmen']);
-        $tgl_pengajuan  = date('Y-m-d');
-        $status         = 'submitted';
-        $sha_apl01      = md5(uniqid(rand(), true));
+
+        $id_registrasi = intval($_SESSION['id_user']);
+        $id_klaster    = intval($_POST['id_klaster']);
+        $tujuan        = input($_POST['tujuan_asesmen']);
+        $tgl_pengajuan = date('Y-m-d');
+        $sha_apl01     = $_POST['sha_apl01'] ?? '';
 
         if ($id_klaster == 0 || $tujuan == "") {
             echo "<script>parent.swal('Error','Data belum lengkap','error');</script>";
             exit;
         }
 
-        // cek duplikasi APL-01 dari klaster yang sama dan registrasi yang sama
-        $cek = mysqli_query($conn, "
-            SELECT id FROM sr_apl01
-            WHERE id_registrasi = '$id_registrasi'
-            AND id_klaster = '$id_klaster'
-            AND status IN ('draft','submitted','verifikasi','asesmen')
-        ");
+        /* =========================
+           MODE EDIT
+        ========================= */
+        if ($sha_apl01 != '') {
 
-        if (mysqli_num_rows($cek) > 0) {
-            echo "<script>
-                parent.swal(
-                    'Informasi',
-                    'Anda masih memiliki pengajuan APL-01 yang aktif untuk klaster ini',
-                    'info'
-                );
-            </script>";
-            exit;
+            $q = mysqli_query($conn,"
+                SELECT id, status
+                FROM sr_apl01
+                WHERE sha = '$sha_apl01'
+                AND id_registrasi = '$id_registrasi'
+                LIMIT 1
+            ");
+
+            if (mysqli_num_rows($q) == 0) {
+                echo "<script>parent.swal('Error','Data APL-01 tidak ditemukan','error');</script>";
+                exit;
+            }
+
+            $d = mysqli_fetch_assoc($q);
+
+            if (!in_array($d['status'], ['draft','submitted'])) {
+                echo "<script>
+                    parent.swal(
+                        'Informasi',
+                        'APL-01 sudah diproses Admin LSP dan tidak dapat diedit',
+                        'info'
+                    );
+                </script>";
+                exit;
+            }
+
+            $id_apl01 = $d['id'];
+
+            mysqli_query($conn,"
+                UPDATE sr_apl01 SET
+                    id_klaster = '$id_klaster',
+                    tujuan_asesmen = '$tujuan'
+                WHERE id = '$id_apl01'
+            ");
+
+            // hapus bukti lama
+           $existing = [];
+            $q = mysqli_query($conn,"
+                SELECT sha, file_bukti_persyaratan
+                FROM sr_apl01_bukti
+                WHERE id_apl01 = '$id_apl01'
+            ");
+
+            while ($r = mysqli_fetch_assoc($q)) {
+                $existing[$r['sha']] = $r['file_bukti_persyaratan'];
+            }
+
+            $bukti_lama_sha = $_POST['bukti_lama_sha'] ?? [];
+            $deleted = array_diff(array_keys($existing), $bukti_lama_sha);
+            foreach ($deleted as $sha_bukti) {
+
+            // hapus file fisik
+            if (!empty($existing[$sha_bukti])) {
+                @unlink("data/bukti-apl-01/" . $existing[$sha_bukti]);
+            }
+
+            // hapus record DB
+            mysqli_query($conn,"DELETE FROM sr_apl01_bukti WHERE sha = '$sha_bukti'");
         }
 
-        // simpan data APL-01
-        $q_apl01 = mysqli_query($conn, "
-            INSERT INTO sr_apl01 
-            (id_registrasi, id_klaster, tujuan_asesmen, tgl_pengajuan, status, sha)
-            VALUES
-            ('$id_registrasi','$id_klaster','$tujuan','$tgl_pengajuan','$status','$sha_apl01')
-        ");
-
-        if (!$q_apl01) {
-            echo "<script>parent.swal('Error','Gagal menyimpan APL-01','error');</script>";
-            exit;
         }
 
-        $id_apl01 = mysqli_insert_id($conn);
+        /* =========================
+           MODE ADD
+        ========================= */
+        else {
 
-        
-        // simpan data bukti persyaratan
+            $sha_apl01 = md5(uniqid(rand(), true));
+
+            mysqli_query($conn,"
+                INSERT INTO sr_apl01
+                (id_registrasi, id_klaster, tujuan_asesmen, tgl_pengajuan, status, sha)
+                VALUES
+                ('$id_registrasi','$id_klaster','$tujuan','$tgl_pengajuan','submitted','$sha_apl01')
+            ");
+
+            $id_apl01 = mysqli_insert_id($conn);
+        }
+
+        /* =========================
+           SIMPAN BUKTI
+        ========================= */
         if (!empty($_POST['bukti_persyaratan'])) {
-
+            
             foreach ($_POST['bukti_persyaratan'] as $i => $bukti) {
 
                 if (trim($bukti) == "") continue;
@@ -113,18 +164,20 @@ if ($sub == "") {
 
                 if (!empty($_FILES['file_bukti_persyaratan']['name'][$i])) {
 
-                    $ext  = pathinfo($_FILES['file_bukti_persyaratan']['name'][$i], PATHINFO_EXTENSION);
-                    $file_name = md5(uniqid()) . '.' . $ext;
-
-                    move_uploaded_file(
-                        $_FILES['file_bukti_persyaratan']['tmp_name'][$i],
-                        "data/bukti-apl-01/" . $file_name
+                    $ext = pathinfo(
+                        $_FILES['file_bukti_persyaratan']['name'][$i],
+                        PATHINFO_EXTENSION
                     );
+
+                    $file_name = $id_registrasi . '_' . str_replace(' ', '_', strtolower($_SESSION["nama"])) . '_' . $id_klaster . '_' . md5(uniqid()) . '.' . $ext;
+
+                    move_uploaded_file($_FILES['file_bukti_persyaratan']['tmp_name'][$i], "data/bukti-apl-01/" . $file_name);
                 }
 
-                $sha_bukti = md5(uniqid(rand(), true));
+                $angka=substr(md5(microtime()),rand(0,26),5);
+                $sha_bukti=md5(uniqid($angka, true));
 
-                mysqli_query($conn, "
+                mysqli_query($conn,"
                     INSERT INTO sr_apl01_bukti
                     (id_apl01, bukti_persyaratan, file_bukti_persyaratan, sha)
                     VALUES
@@ -133,18 +186,13 @@ if ($sub == "") {
             }
         }
 
-        // feedback sukses
+
         ?>
         <script>
-            parent.swal({
-                title: "Sukses",
-                text: "Data berhasil disimpan",
-                type: "success"
-            }, function () {
-                parent.location.href = "<?= $_SESSION['domain']; ?>/apl-01";
-            });
+            top.location.href="<?=$_SESSION["domain"];?>/<?=$mod;?>";
         </script>
         <?
+        exit;
     }
 }
 ?>

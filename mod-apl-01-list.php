@@ -3,20 +3,34 @@ if ($sub == "") {
 
     $columns = array(
         0 => 'id',
-        1 => 'skema',
-        2 => 'klaster',
-        3 => 'tujuan_asesmen',
+        1 => 'nama',
+        2 => 'skema',
+        3 => 'klaster',
+        // 4 => 'tujuan_asesmen',
         4 => 'tgl_pengajuan',
-        5 => 'id'
+        5 => 'status',
+        6 => 'id'
     );
+
+    $where = "";
+    if ($_SESSION['hak_akses'] == 'asessi') {
+        $where = " AND a.id_registrasi = '".$_SESSION['id_user']."' ";
+    }
+    elseif ($_SESSION['hak_akses'] == 'admin_lsp') {
+        $where = " AND s.id_lsp = '".$_SESSION['id_lsp']."' ";
+    }
+
 
     // total data tanpa filter
     $q_count = mysqli_query($conn, "
         SELECT COUNT(a.id) AS jumlah
         FROM sr_apl01 a
-        JOIN sr_registrasi r ON a.id_registrasi = r.id
-        WHERE r.id = '".$_SESSION['id_user']."'
+        JOIN sk_skema_klaster k ON a.id_klaster = k.id
+        JOIN sk_skema s ON k.id_skema_sertifikasi = s.id
+        WHERE 1=1
+        $where
     ");
+
 
     $datacount     = mysqli_fetch_assoc($q_count);
     $totalData     = $datacount['jumlah'];
@@ -34,7 +48,8 @@ if ($sub == "") {
         $keyword = "
             AND (
                 s.skema LIKE '%$search%' OR
-                k.klaster LIKE '%$search%'
+                k.klaster LIKE '%$search%' OR
+                r.nama LIKE '%$search%'
             )
         ";
     }
@@ -48,27 +63,31 @@ if ($sub == "") {
             a.tgl_pengajuan,
             a.status,
             s.skema,
-            k.klaster
+            k.klaster,
+            r.nama
         FROM sr_apl01 a
         JOIN sr_registrasi r ON a.id_registrasi = r.id
         JOIN sk_skema_klaster k ON a.id_klaster = k.id
         JOIN sk_skema s ON k.id_skema_sertifikasi = s.id
-        WHERE r.id = '".$_SESSION['id_user']."'
+        WHERE 1=1
+        $where
         $keyword
         ORDER BY $order $dir
         LIMIT $limit OFFSET $start
     ");
 
+
     // hitung total data setelah difilter
     $qcount = mysqli_query($conn, "
         SELECT COUNT(a.id) AS jumlah
         FROM sr_apl01 a
-        JOIN sr_registrasi r ON a.id_registrasi = r.id
         JOIN sk_skema_klaster k ON a.id_klaster = k.id
         JOIN sk_skema s ON k.id_skema_sertifikasi = s.id
-        WHERE r.id = '".$_SESSION['id_user']."'
+        WHERE 1=1
+        $where
         $keyword
     ");
+
 
     $datacount     = mysqli_fetch_assoc($qcount);
     $totalFiltered = $datacount['jumlah'];
@@ -81,20 +100,20 @@ if ($sub == "") {
 
         // menentukan action berdasarkan status
         $status = $row['status'];
-        $action = '
-            <a href="javascript:void(0)"
-            onclick="edit(\''.$row['sha'].'\')"
-            class="btn btn-sm btn-primary">
-                <i class="fa fa-edit"></i>
-            </a>
-        ';
+        $textAction = $_SESSION['hak_akses'] == 'asessi' ? 'Edit' : 'View';
+        $action="<a href='javascript:void(0)' data-toggle='dropdown'><i class='fas fa-bars fa-sm text-gray-800-50'></i></a>
+            <ul class='dropdown-menu'>
+                <li><a href='javascript:void(0)' onclick=edit('".$row["sha"]."')>$textAction</a></li>
+            </ul>";
 
         $nestedData = array();
         $nestedData['no']                = "<center>".$no."</center>";
+        $nestedData['nama']              = $row['nama'];
         $nestedData['skema']             = $row['skema'];
         $nestedData['klaster']           = $row['klaster'];
-        $nestedData['tujuan_asesmen']            = $row['tujuan_asesmen'];
+        // $nestedData['tujuan_asesmen']    = $row['tujuan_asesmen'];
         $nestedData['tanggal_pengajuan'] = tgl_indo($row['tgl_pengajuan']);
+        $nestedData['status']            = ucfirst($row['status']);
         $nestedData['action']            = "<center>$action</center>";
 
         $data[] = $nestedData;

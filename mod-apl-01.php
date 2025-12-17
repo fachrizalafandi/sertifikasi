@@ -12,10 +12,11 @@
                         <thead>
                             <tr>
                                 <th width='5%'>No.</th>
+                                <th width='20%'>Nama</th>
                                 <th width='20%'>Skema</th>
                                 <th width='20%'>Klaster</th>
-                                <th width='20%'>Tujuan Asesmen</th>
                                 <th width='20%'>Tanggal Pengajuan</th>
+                                <th width='20%'>Status</th>
                                 <th width='5%'><i class="fas fa-bars fa-sm text-gray-800-50"></i></th>
                             </tr>
                         </thead>
@@ -26,6 +27,13 @@
         </div>
 
         <script>
+            <?
+            if ($_SESSION['hak_akses'] != "asessi") {
+                ?>
+                document.getElementById("add_data").style.display="none";
+                <?
+            }
+            ?>
             $(function()
             {
                 $('#datatable').DataTable({
@@ -43,10 +51,11 @@
                     },
                     "columns": [
                         { "data": "no" },
+                        { "data": "nama" },
                         { "data": "skema" },
                         { "data": "klaster" },
-                        { "data": "tujuan_asesmen" },
                         { "data": "tanggal_pengajuan" },
+                        { "data": "status" },
                         { "data": "action" },
                         ]  
                 });
