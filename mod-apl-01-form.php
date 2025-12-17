@@ -168,8 +168,8 @@ if ($sub == "") {
     </button>
 
     <hr>
-    <div class="text-right">
-        <button type="submit" class="btn btn-primary">
+    <div class="text-left">
+        <button type="submit" class="btn btn-success">
             Ajukan APL-01
         </button>
     </div>

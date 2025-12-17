@@ -79,16 +79,15 @@ if ($sub == "") {
 
     while ($row = mysqli_fetch_assoc($query)) {
 
-        // label status (bisa dikembangkan nanti)
-        $status = ucfirst($row['status']);
-
-        $action = "
-            <a href='#'
-               onclick=\"openApl01('".$row['sha']."')\"
-               title='Isi / Detail APL-01'>
-                <i class='fas fa-edit'></i>
+        // menentukan action berdasarkan status
+        $status = $row['status'];
+        $action = '
+            <a href="javascript:void(0)"
+            onclick="edit(\''.$row['sha'].'\')"
+            class="btn btn-sm btn-primary">
+                <i class="fa fa-edit"></i>
             </a>
-        ";
+        ';
 
         $nestedData = array();
         $nestedData['no']                = "<center>".$no."</center>";
