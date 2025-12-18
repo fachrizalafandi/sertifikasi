@@ -1,7 +1,7 @@
 /*
  Navicat Premium Dump SQL
 
- Source Server         : localhost mysql
+ Source Server         : mysql localhost
  Source Server Type    : MySQL
  Source Server Version : 80403 (8.4.3)
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 80403 (8.4.3)
  File Encoding         : 65001
 
- Date: 16/12/2025 23:02:55
+ Date: 18/12/2025 16:00:28
 */
 
 SET NAMES utf8mb4;
@@ -158,7 +158,7 @@ CREATE TABLE `sk_skema_elemen`  (
   `kuk` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
   `sha` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 161 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 222 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sk_skema_elemen
@@ -179,8 +179,67 @@ INSERT INTO `sk_skema_elemen` VALUES (155, 1, 'Melaksanakan kegiatan di laborato
 INSERT INTO `sk_skema_elemen` VALUES (156, 1, 'Melaksanakan kegiatan di laboratorium berdasarkan K3', 'Melaporkan ketidaknormalan fungsi kerja peralatan mengikuti prosedur ?', 'a969fb822dbaedb98ec9d08524d43834');
 INSERT INTO `sk_skema_elemen` VALUES (157, 1, 'Melaksanakan kegiatan di laboratorium berdasarkan K3', 'Menangani kecelakaan kerja di laboratorium sesuai prosedur ?', '3bb13f0b9a3312e3c9dff37880d030d2');
 INSERT INTO `sk_skema_elemen` VALUES (158, 1, 'Melaksanakan kegiatan di laboratorium berdasarkan K3', 'Menangani limbah hasil kegiatan di laboratorium sesuai prosedur ?', '0bf7715c441bae3097a553aac665221d');
-INSERT INTO `sk_skema_elemen` VALUES (159, 3, 'Menyiapkan analisis', 'Menyiapkan peralatan gelas, alat pelindung diri dan metode uji sesuai prosedur ?', '47ce60ca7f0500f0d8cbe545cfed2d53');
-INSERT INTO `sk_skema_elemen` VALUES (160, 3, 'Menyiapkan analisis', 'Memastikan bahan-bahan kimia, sampel uji dan larutan standart tersedia sesuai kebutuhan ?', '95596475e23ac579df337add8b2b69e2');
+INSERT INTO `sk_skema_elemen` VALUES (161, 3, 'Menyiapkan analisis', 'Menyiapkan peralatan gelas, alat pelindung diri dan metode uji sesuai prosedur ?', '2d40663a0b7bb7f4f633d5b93a9ab0c5');
+INSERT INTO `sk_skema_elemen` VALUES (162, 3, 'Menyiapkan analisis', 'Memastikan bahan-bahan kimia, sampel uji dan larutan standart tersedia sesuai kebutuhan ?', '867fae02e58e9b5448e1906e9da17fca');
+INSERT INTO `sk_skema_elemen` VALUES (163, 3, 'Melaksanakan titrasi', 'Merangkai peralatan titrasi sesuai prosedur ?', 'ef5bc33e69309071842afec034147ce5');
+INSERT INTO `sk_skema_elemen` VALUES (164, 3, 'Melaksanakan titrasi', 'Melaksanakan proses titrasi sesuai prosedur ?', '9642e8d5aaf645a2a8ae7ec700c1429e');
+INSERT INTO `sk_skema_elemen` VALUES (165, 3, 'Melaporkan hasil analisis', 'Mencatat data hasil titrasi sesuai prosedur ?', '0e32dbd94023f51e430e98b7f21791fa');
+INSERT INTO `sk_skema_elemen` VALUES (166, 3, 'Melaporkan hasil analisis', 'Menghitung data hasil analisis sesuai prosedur ?', 'c0a0f79ce358b55a154cd47e3f8a3523');
+INSERT INTO `sk_skema_elemen` VALUES (167, 3, 'Melaporkan hasil analisis', 'Melaporkan hasil analisis sesuai prosedur ?', 'b0b4954afe2e90508d6be909c30c6ee4');
+INSERT INTO `sk_skema_elemen` VALUES (168, 4, 'Menyiapkan analisis', 'Menyiapkan metode uji, alat pelindung diri dan peralatan untuk analisis gravimetri sesuai prosedur ?', '595efd11c095aeb147ea34a5cbc59804');
+INSERT INTO `sk_skema_elemen` VALUES (169, 4, 'Menyiapkan analisis', 'Menyiapkan bahan-bahan kimia dan sampel uji sesuai kebutuhan ?', 'eb8aa80dd9128dad3cdf2f21bd6702d6');
+INSERT INTO `sk_skema_elemen` VALUES (170, 4, 'Melaksanakan analisis gravimetri', 'Menggunakan peralatan analisis gravimetri sesuai dengan prosedur ?', '846cb6c0a4643093d81a46627875056e');
+INSERT INTO `sk_skema_elemen` VALUES (171, 4, 'Melaksanakan analisis gravimetri', 'Melaksanakan proses analisis gravimetri sesuai prosedur ?', '0ff723f1188be2a6adc9213b91261f33');
+INSERT INTO `sk_skema_elemen` VALUES (172, 4, 'Melaporkan Hasil Analisis', 'Mencatat data hasil analisis sesuai prosedur ?', 'f5f2f9b0037da4efca816f44874ecac1');
+INSERT INTO `sk_skema_elemen` VALUES (173, 4, 'Melaporkan Hasil Analisis', 'Menghitung data analisis sesuai prosedur ?', '483d6a494cecc10e3041f3088e9e0f1c');
+INSERT INTO `sk_skema_elemen` VALUES (174, 4, 'Melaporkan Hasil Analisis', 'Melaporkan hasil analisis sesuai prosedur ?', '63262a40685e0b63aca257f424b9b773');
+INSERT INTO `sk_skema_elemen` VALUES (175, 5, 'Menyiapkan Analisis', 'Mengenakan alat pelindung diri sesuai prosedur.', '1bbe3048fab27ec3bc81aa9935534dac');
+INSERT INTO `sk_skema_elemen` VALUES (176, 5, 'Menyiapkan Analisis', 'Menyiapkan metode uji, alat pelindung diri, dan peralatan untuk analisis', 'f3e88f2e891dc60c96441548530136ea');
+INSERT INTO `sk_skema_elemen` VALUES (177, 5, 'Menyiapkan Analisis', 'Menyiapkan bahan-bahan kimia dan sampel uji sesuai kebutuhan.', 'c0df0d1bff499cc1df1f3e0d7de6c543');
+INSERT INTO `sk_skema_elemen` VALUES (178, 5, 'Melakukan Analisis Elektrokimia', 'Mengoperasikan analisis elektrokimia sesuai prosedur', '490d6e444bd0cafe764a19288445b8f9');
+INSERT INTO `sk_skema_elemen` VALUES (179, 5, 'Melakukan Analisis Elektrokimia', 'Melaksanakan proses analisis elektrokimia sesuai prosedur', '69e1f25fbf533b5121e4a8923219f2a3');
+INSERT INTO `sk_skema_elemen` VALUES (180, 5, 'Melaporkan Hasil Analisis', 'Mencatat data hasil analisis sesuai prosedur', '075de35b3e335571bf2c8e3b0c7a5ebb');
+INSERT INTO `sk_skema_elemen` VALUES (181, 5, 'Melaporkan Hasil Analisis', 'Menghitung data hasil analisis sesuai prosedur', '319e3fb3a1216e02ce79aaddd5cfd50a');
+INSERT INTO `sk_skema_elemen` VALUES (182, 5, 'Melaporkan Hasil Analisis', 'Melaporkan hasil analisis sesuai prosedur', 'a5f75ba32b70bc5166df1f181c20ac71');
+INSERT INTO `sk_skema_elemen` VALUES (183, 6, 'Menyiapkan Analisis', 'Mengenakan alat pelindung diri sesuai prosedur', '799bf6f1a09849a5e54a4374c1188b8c');
+INSERT INTO `sk_skema_elemen` VALUES (184, 6, 'Menyiapkan Analisis', 'Menyiapkan metode uji, alat pelindung diri, dan peralatan untuk analisis instrumental sederhana sesuai prosedurs', 'ac99a5e397d72597edb4be740fa3ddd8');
+INSERT INTO `sk_skema_elemen` VALUES (185, 6, 'Menyiapkan Analisis', 'Menyiapkan bahan-bahan kimia dan sampel uji sesuai kebutuhan', 'c5a59b3ff68512ba651a816b5bb0f76b');
+INSERT INTO `sk_skema_elemen` VALUES (186, 6, 'Melakukan Pengukuran Standar dan Sampel', 'Mengoperasikan instrument analitik sederhana mengikuti panduan pengoperasian alat', 'fd470a4848c2b101763b3f04d50ca61c');
+INSERT INTO `sk_skema_elemen` VALUES (187, 6, 'Melakukan Pengukuran Standar dan Sampel', 'Menentukan parameter pengoperasian instrument sesuai prosedur', 'd7abd4adb911fb8ac9ccadaa4c4d648a');
+INSERT INTO `sk_skema_elemen` VALUES (188, 6, 'Melakukan Pengukuran Standar dan Sampel', 'Melaksanakan analisis instrumental sederhana mengikuti prosedur', '9f7e20963601bac0a29b3620b329d448');
+INSERT INTO `sk_skema_elemen` VALUES (189, 6, 'Melakukan Pengukuran Standar dan Sampel', 'Mencatat data hasil pengukuran sesuai prosedur', '1dfcc7b73fc90e48c58980ade5a0b386');
+INSERT INTO `sk_skema_elemen` VALUES (190, 6, 'Melaporkan Hasil Analisis', 'Mencatat data hasil pengukuran dan mengolah sesuai prosedur', '3dc43ad21fc1065bfa54258b98ff5844');
+INSERT INTO `sk_skema_elemen` VALUES (191, 6, 'Melaporkan Hasil Analisis', 'Melaporkan hasil analisis sesuai prosedur', '74fb188e923fa30213463c3bdc15b1d0');
+INSERT INTO `sk_skema_elemen` VALUES (192, 7, 'Menyiapkan Analisis', 'Mengenakan alat pelindung diri sesuai prosedur', '928a16902fddc4c40f14095ab3263d18');
+INSERT INTO `sk_skema_elemen` VALUES (193, 7, 'Menyiapkan Analisis', 'Menyiapkan metode uji, dan peralatan pendukung sesuai prosedurs', 'c6ebca9675d1de15ba572247e5c70ebb');
+INSERT INTO `sk_skema_elemen` VALUES (194, 7, 'Menyiapkan Analisis', 'Menyiapkan bahan standar, bahan kimia, blanko dan sampel uji sesuai prosedur', '2bfe931afd1c334baa198a080cb41bac');
+INSERT INTO `sk_skema_elemen` VALUES (195, 7, 'Melakukan Analisis Spektrofotometri', 'Mengoperasikan Spektrofotometer sesuai panduan pengoperasian alat', '28347ff39c4a398175ea97e9785d093b');
+INSERT INTO `sk_skema_elemen` VALUES (196, 7, 'Melakukan Analisis Spektrofotometri', 'Mengatur parameter analisis sesuai karakteristik sample', '36b055c8f6fa4b6e440bff41c79e39d3');
+INSERT INTO `sk_skema_elemen` VALUES (197, 7, 'Melakukan Analisis Spektrofotometri', 'Mengukur Deret standard an sample sesuai prosedur', 'e9a0810e94cabbe2c01c33b305d66f1d');
+INSERT INTO `sk_skema_elemen` VALUES (198, 7, 'Melakukan Analisis Spektrofotometri', 'Membersihkan kembali peralatan uji sesuai prosedur', 'aa1f82435bbe6051851f180c41d42594');
+INSERT INTO `sk_skema_elemen` VALUES (199, 7, 'Melakukan Analisis Spektrofotometri', 'Menyimpan kembali bahan kimia , larutan standar, peralatan serta alat pelindung diri sesuai prosedur', '27d382c2154c9beee2ff3fa9d0eb6ae7');
+INSERT INTO `sk_skema_elemen` VALUES (200, 7, 'Melaporkan Hasil Analisis', 'Mencatat dan mengolah data hasil analisis sesuai prosedur', 'e33df868f74f8231c1bf14f46929d74c');
+INSERT INTO `sk_skema_elemen` VALUES (201, 7, 'Melaporkan Hasil Analisis', 'Melaporkan hasil analisis sesuai prosedur', 'cb5b9e9cc5ab66aed5163f409e245a40');
+INSERT INTO `sk_skema_elemen` VALUES (202, 8, 'Menyiapkan Analisis', 'Mengenakan alat pelindung diri sesuai prosedur', '2169fa7670924331af03eba738c8acd9');
+INSERT INTO `sk_skema_elemen` VALUES (203, 8, 'Menyiapkan Analisis', 'Menyiapkan metode uji proksimat, dan peralatan pendukung sesuai prosedurs', '11197b2853cb1eeb224716c13777386e');
+INSERT INTO `sk_skema_elemen` VALUES (204, 8, 'Menyiapkan Analisis', 'Menyiapkan bahan standar, bahan kimia, dan sampel uji sesuai prosedur', '83df8e4070f28b46e240bd4060ee20d6');
+INSERT INTO `sk_skema_elemen` VALUES (205, 8, 'Melaksanakan Analisis Proksimat', 'Melaksanakan analisis proksimat sesuai prosedur', '8b7efd53bd9b4839d57da4592d21b08a');
+INSERT INTO `sk_skema_elemen` VALUES (206, 8, 'Melaksanakan Analisis Proksimat', 'Menyimpan kembali semua peralatan dan bahan sesuai prosedur', 'c50842c7ca0248c9a1ca458de7464aed');
+INSERT INTO `sk_skema_elemen` VALUES (207, 8, 'Melaporkan Hasil Analisis', 'Mengolah data hasil analisis sesuai prosedur', 'b4e1f9874c349c23301bcb191df7e89e');
+INSERT INTO `sk_skema_elemen` VALUES (208, 8, 'Melaporkan Hasil Analisis', 'Melaporkan hasil analisis sesuai prosedur', '1929fd2076a47d18d74d3a77a20b9053');
+INSERT INTO `sk_skema_elemen` VALUES (209, 9, 'Menyiapkan Dokumen', 'Menyiapkan rekaman hasil analisis sesuai prosedur', 'd0de0284ec3e54dfc116211cdda2fd92');
+INSERT INTO `sk_skema_elemen` VALUES (210, 9, 'Menyiapkan Dokumen', 'Menyiapkan rekaman data penunjang hasil analisis sesuai prosedur', '763ac86c545a6f48e01efe37ff0c98a1');
+INSERT INTO `sk_skema_elemen` VALUES (211, 9, 'Melaksanakan Verifikasi Data', 'Menginput data hasil analisis dan data penunjang sesuai prosedur', '9a68f4d0ecafa825d73194f62ec77163');
+INSERT INTO `sk_skema_elemen` VALUES (212, 9, 'Melaksanakan Verifikasi Data', 'Melaksanakan Verifikasi keabsahan data yang sudah diinput dengn mengolah data dari system control', '8257cf376517f677681c850ef2eee50c');
+INSERT INTO `sk_skema_elemen` VALUES (213, 9, 'Melaksanakan Verifikasi Data', 'Memperbarui data yang tidak valid melalui analisa ulang', '7196765f6643410fc15628bf1040d7f3');
+INSERT INTO `sk_skema_elemen` VALUES (214, 9, 'Menghitung Data Analisis', 'Menghitung data analisis mengikuti rumus yang telah ditentukan', '1a490a71208634dfebe3fe18efdca8c4');
+INSERT INTO `sk_skema_elemen` VALUES (215, 9, 'Menghitung Data Analisis', 'Menentukan nilai ketidakpastian dan jumlah angka penting berdasarkan data dari system control', '9cef1992312b93795922f9b398cebf2f');
+INSERT INTO `sk_skema_elemen` VALUES (216, 9, 'Menghitung Data Analisis', 'Menuliskan hasil perhitungan sesuai konsep angka penting', '5c2ee5837c1fdb76be356a1261d126e0');
+INSERT INTO `sk_skema_elemen` VALUES (217, 9, 'Menghitung Data Analisis', 'Mendiskusikan nilai yang keluar dari batas keberterimaan dengan penyelia untuk menentukan penyebabnya', '83f931fb2e31c60d79eef15847392997');
+INSERT INTO `sk_skema_elemen` VALUES (218, 9, 'Membuat Laporan', 'Mencatat hasil perhitungan sesuai prosedur', '20ef7a37be5bf0250eae413378084402');
+INSERT INTO `sk_skema_elemen` VALUES (219, 9, 'Membuat Laporan', 'Membuat komentar/saran tindak lanjut atas faktor penyebab hasil analisis yang keluar dari syarat keberterimaan', '86b5b814c9e0f15bbc36b1c81ce858a5');
+INSERT INTO `sk_skema_elemen` VALUES (220, 9, 'Membuat Laporan', 'Menyampaikan laporan ke pihak yang berhak menerimanya', 'b457a5ce89f5f9139957cef36ebc9958');
+INSERT INTO `sk_skema_elemen` VALUES (221, 9, 'Membuat Laporan', 'Menjaga kerahasiaan hasil analisis sesuai ketentuan perusahaan', 'eaf2b28d3a9795b1f198bffa39bfd0fd');
 
 -- ----------------------------
 -- Table structure for sk_skema_klaster
@@ -352,13 +411,12 @@ CREATE TABLE `sr_apl01`  (
   `sha` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sr_apl01
 -- ----------------------------
-INSERT INTO `sr_apl01` VALUES (1, 3, '2025-12-16', 77, 'Sertifikasi', 'a6a3a2b5d8ef761527e12267f78ea2d7', 'submitted');
-INSERT INTO `sr_apl01` VALUES (2, 3, '2025-12-16', 78, 'Sertifikasi', 'd1b3b4932b2c0402d56f49cf02354494', 'submitted');
+INSERT INTO `sr_apl01` VALUES (1, 3, '2025-12-18', 77, 'Sertifikasi', '9aab179f46477b93cae2516927b8f436', 'submitted');
 
 -- ----------------------------
 -- Table structure for sr_apl01_bukti
@@ -371,14 +429,79 @@ CREATE TABLE `sr_apl01_bukti`  (
   `file_bukti_persyaratan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `sha` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sr_apl01_bukti
 -- ----------------------------
-INSERT INTO `sr_apl01_bukti` VALUES (1, 1, 'Ijazah SMK', 'b9b0af4cfae7494d24f68ab292f2db12.pdf', 'd1d60374ce6833e43d6c1d1fa6e1db6d');
-INSERT INTO `sr_apl01_bukti` VALUES (2, 1, 'CV', '5ab123f560b2cd90616232537884220e.pdf', 'affa36c4962cdd627065cef184fb2d8c');
-INSERT INTO `sr_apl01_bukti` VALUES (3, 2, 'Ijazah SMK', 'd4c4c4eeeab0759cd20ebf8d1cf299ca.pdf', 'db1d79d7f6dc4667bc7f5a7be6311b6c');
+INSERT INTO `sr_apl01_bukti` VALUES (1, 1, 'Ijazah SMK', '3_mochammad_fachrizal_afandi_77_a12f323986e85488ec75bfbdffe0c3a8.pdf', '3fc0e0b76550848e3ca4a264c9a1183d');
+INSERT INTO `sr_apl01_bukti` VALUES (2, 1, 'Ijazah S1', '3_mochammad_fachrizal_afandi_77_040f3560ac84db6983c6444664008fa4.pdf', '3008a3f8586794c52126624daee8738c');
+INSERT INTO `sr_apl01_bukti` VALUES (3, 1, 'Surat Keterangan Magang', '3_mochammad_fachrizal_afandi_77_b0aacd003d145c441e68b459bd3b4758.pdf', '1fb4268036eaef98509bc1eea6e4aacb');
+INSERT INTO `sr_apl01_bukti` VALUES (4, 1, 'Sertifikat Pelatihan Analisis Lab', '3_mochammad_fachrizal_afandi_77_0a4738d34ea59406d68f6a2d86333c88.pdf', 'a1669133df325cc318b9ea8d5df2b4fd');
+INSERT INTO `sr_apl01_bukti` VALUES (5, 1, 'Surat Keterangan Pengalaman Kerja', '3_mochammad_fachrizal_afandi_77_6e9484eec18ceb8fa8dd3409337ea676.pdf', 'ff19e9e936507262fdeaddfee8bccb08');
+
+-- ----------------------------
+-- Table structure for sr_apl02
+-- ----------------------------
+DROP TABLE IF EXISTS `sr_apl02`;
+CREATE TABLE `sr_apl02`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_apl01` int NULL DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `tgl_submit` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `sha` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sr_apl02
+-- ----------------------------
+INSERT INTO `sr_apl02` VALUES (1, 1, 'submitted', '2025-12-18 16:00:03', '3e1bfe1002c5feefb26688c7f6cc7652');
+
+-- ----------------------------
+-- Table structure for sr_apl02_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `sr_apl02_detail`;
+CREATE TABLE `sr_apl02_detail`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_apl02` int NULL DEFAULT NULL,
+  `id_uk` int NULL DEFAULT NULL,
+  `id_elemen` int NULL DEFAULT NULL,
+  `penilaian` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `id_bukti_persyaratan` int NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sr_apl02_detail
+-- ----------------------------
+INSERT INTO `sr_apl02_detail` VALUES (1, 1, 1, 151, 'K', 1);
+INSERT INTO `sr_apl02_detail` VALUES (2, 1, 1, 154, 'K', 2);
+INSERT INTO `sr_apl02_detail` VALUES (3, 1, 2, 135, 'K', 3);
+INSERT INTO `sr_apl02_detail` VALUES (4, 1, 2, 138, 'K', 4);
+INSERT INTO `sr_apl02_detail` VALUES (5, 1, 2, 141, 'K', 5);
+INSERT INTO `sr_apl02_detail` VALUES (6, 1, 3, 161, 'BK', 1);
+INSERT INTO `sr_apl02_detail` VALUES (7, 1, 3, 163, 'K', 2);
+INSERT INTO `sr_apl02_detail` VALUES (8, 1, 3, 165, 'K', 3);
+INSERT INTO `sr_apl02_detail` VALUES (9, 1, 4, 168, 'K', 4);
+INSERT INTO `sr_apl02_detail` VALUES (10, 1, 4, 170, 'K', 5);
+INSERT INTO `sr_apl02_detail` VALUES (11, 1, 4, 172, 'BK', 1);
+INSERT INTO `sr_apl02_detail` VALUES (12, 1, 5, 175, 'K', 2);
+INSERT INTO `sr_apl02_detail` VALUES (13, 1, 5, 178, 'K', 3);
+INSERT INTO `sr_apl02_detail` VALUES (14, 1, 5, 180, 'K', 4);
+INSERT INTO `sr_apl02_detail` VALUES (15, 1, 6, 183, 'K', 5);
+INSERT INTO `sr_apl02_detail` VALUES (16, 1, 6, 186, 'K', 1);
+INSERT INTO `sr_apl02_detail` VALUES (17, 1, 6, 190, 'K', 2);
+INSERT INTO `sr_apl02_detail` VALUES (18, 1, 7, 192, 'K', 4);
+INSERT INTO `sr_apl02_detail` VALUES (19, 1, 7, 195, 'K', 5);
+INSERT INTO `sr_apl02_detail` VALUES (20, 1, 7, 200, 'K', 1);
+INSERT INTO `sr_apl02_detail` VALUES (21, 1, 8, 202, 'K', 3);
+INSERT INTO `sr_apl02_detail` VALUES (22, 1, 8, 205, 'K', 5);
+INSERT INTO `sr_apl02_detail` VALUES (23, 1, 8, 207, 'K', 1);
+INSERT INTO `sr_apl02_detail` VALUES (24, 1, 9, 209, 'BK', 4);
+INSERT INTO `sr_apl02_detail` VALUES (25, 1, 9, 211, 'K', 5);
+INSERT INTO `sr_apl02_detail` VALUES (26, 1, 9, 214, 'K', 1);
+INSERT INTO `sr_apl02_detail` VALUES (27, 1, 9, 218, 'BK', 4);
 
 -- ----------------------------
 -- Table structure for sr_registrasi

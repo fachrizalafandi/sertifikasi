@@ -148,6 +148,58 @@ if ($sub == "") {
             ");
 
             $id_apl01 = mysqli_insert_id($conn);
+
+            /* =========================
+            AUTO CREATE APL-02
+            ========================= */
+
+            // cek apakah apl02 sudah ada (antisipasi duplikasi)
+            $cek_apl02 = mysqli_query($conn,"
+                SELECT id FROM sr_apl02
+                WHERE id_apl01 = '$id_apl01'
+                LIMIT 1
+            ");
+
+            if (mysqli_num_rows($cek_apl02) == 0) {
+
+                $sha_apl02 = md5(uniqid(rand(), true));
+
+                // insert header apl02
+                mysqli_query($conn,"
+                    INSERT INTO sr_apl02
+                    (id_apl01, status, tgl_submit, sha)
+                    VALUES
+                    ('$id_apl01','draft',NULL,'$sha_apl02')
+                ");
+
+                $id_apl02 = mysqli_insert_id($conn);
+
+                /* =========================
+                GENERATE ELEMEN APL-02 (berdasarkan klaster)
+                ========================= */
+
+                $q_elemen = mysqli_query($conn, "
+                    SELECT 
+                        uk.id AS id_uk,
+                        MIN(e.id) AS id_elemen
+                    FROM sk_skema_uk uk
+                    JOIN sk_skema_elemen e ON e.id_uk = uk.id
+                    WHERE uk.id_klaster = '$id_klaster'
+                    GROUP BY uk.id, e.elemen
+                    ORDER BY uk.id ASC, id_elemen ASC
+                ");
+
+
+                while ($r = mysqli_fetch_assoc($q_elemen)) {
+                    mysqli_query($conn, "
+                        INSERT INTO sr_apl02_detail
+                        (id_apl02, id_uk, id_elemen, penilaian, id_bukti_persyaratan)
+                        VALUES
+                        ('$id_apl02', '".$r['id_uk']."', '".$r['id_elemen']."', NULL, NULL)
+                    ");
+                }
+            }
+
         }
 
         /* =========================
