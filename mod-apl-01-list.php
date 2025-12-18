@@ -106,6 +106,20 @@ if ($sub == "") {
                 <li><a href='javascript:void(0)' onclick=edit('".$row["sha"]."')>$textAction</a></li>
             </ul>";
 
+        if($row['status']=="draft"){
+            $badge_class="secondary";
+        } elseif($row['status']=="submitted"){
+            $badge_class="info";
+        } elseif($row['status']=="verified"){
+            $badge_class="primary";
+        } elseif($row['status']=="approved"){
+            $badge_class="success";
+        } elseif($row['status']=="rejected"){
+            $badge_class="danger";
+        } else {
+            $badge_class="dark";
+        }
+
         $nestedData = array();
         $nestedData['no']                = "<center>".$no."</center>";
         $nestedData['nama']              = $row['nama'];
@@ -113,7 +127,7 @@ if ($sub == "") {
         $nestedData['klaster']           = $row['klaster'];
         // $nestedData['tujuan_asesmen']    = $row['tujuan_asesmen'];
         $nestedData['tanggal_pengajuan'] = tgl_indo($row['tgl_pengajuan']);
-        $nestedData['status']            = ucfirst($row['status']);
+        $nestedData['status']            = "<span class='badge badge-". $badge_class ."'>".ucfirst($row['status'])."</span>";
         $nestedData['action']            = "<center>$action</center>";
 
         $data[] = $nestedData;
