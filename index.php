@@ -287,6 +287,10 @@
                               {
                                   return swal({ title: 'Hapus Data', text: 'Yakin akan menghapus data ?', type: 'info', showCancelButton: true, confirmButtonColor: 'red', confirmButtonText: 'Hapus',   closeOnConfirm: false }, function(){ inframe.location.href='<?=$_SESSION["domain"];?>/proses?mod=<?=$mod;?>&sub=<?=$sub;?>&act=delete&sha='+sha; });
                               }
+
+                              $(function () {
+                                $('[data-toggle="tooltip"]').tooltip()
+                              });
                             </script>                   
                             <!-- Page Heading -->
                             <div class="d-sm-flex align-items-center justify-content-between mb-4">

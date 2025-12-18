@@ -1,6 +1,7 @@
 <?
 if ($sub == "") {
 
+    // Ambil data APL-02 berdasarkan SHA dari parameter GET
     $sha = mysqli_real_escape_string($conn, $_GET['sha']);
 
     $q_apl02 = mysqli_query($conn, "
@@ -26,10 +27,35 @@ if ($sub == "") {
         exit;
     }
 
-    $apl = mysqli_fetch_assoc($q_apl02);
+    $apl02 = mysqli_fetch_assoc($q_apl02);
+
+    // Ambil detail APL-02 -> Mode Edit (jika isian sudah ada)
+    $apl02_detail = [];
+    $q_detail = mysqli_query($conn, "
+        SELECT id_uk, id_elemen, penilaian, id_bukti_persyaratan
+        FROM sr_apl02_detail
+        WHERE id_apl02 = '".$apl02['id_apl02']."'
+    ");
+
+    while ($d = mysqli_fetch_assoc($q_detail)) {
+        $apl02_detail[$d['id_uk']][$d['id_elemen']] = [
+            'penilaian' => $d['penilaian'],
+            'bukti'     => $d['id_bukti_persyaratan']
+        ];
+    }
+
+    // Cek apakah boleh edit atau tidak
+    // draft, submitted => boleh edit
+    // processed, verified, passed, rejected => tidak boleh edit
+    $canEdit = true;
+    if (in_array($apl02['status_apl02'], ['draft', 'submitted'])) {
+        $canEdit = true;
+    } else {
+        $canEdit = false;
+    }
 ?>
-<h3><?=$apl["skema"];?></h3>
-<spam><?=$apl["nomor"];?> - <?=$apl["klaster"];?></spam>
+<h3><?=$apl02["skema"];?></h3>
+<spam><?=$apl02["nomor"];?> - <?=$apl02["klaster"];?></spam>
 
 <hr>
 
@@ -47,16 +73,17 @@ if ($sub == "") {
 </div>
 
 <?
+// Ambil unit kompetensi berdasarkan klaster
 $q_uk = mysqli_query($conn, "
     SELECT id, kode, unit_kompetensi
     FROM sk_skema_uk
-    WHERE id_klaster = '".$apl['id_klaster']."'
+    WHERE id_klaster = '".$apl02['id_klaster']."'
     ORDER BY kode ASC
 ");
 ?>
 
 <form method="post" action="<?= $_SESSION['domain']; ?>/proses?mod=<?= $mod ?>&act=add" target="inframe">
-<input type="hidden" name="sha_apl02" value="<?= $apl['sha_apl02']; ?>">
+<input type="hidden" name="sha_apl02" value="<?= $apl02['sha_apl02']; ?>">
 
 <? while ($uk = mysqli_fetch_assoc($q_uk)) { ?>
 <div class="card mb-3">
@@ -65,6 +92,7 @@ $q_uk = mysqli_query($conn, "
     </div>
     <div class="card-body">
     <?
+    // Ambil elemen berdasarkan unit kompetensi
     $q_elemen = mysqli_query($conn, "
         SELECT 
             MIN(id) AS id_elemen, 
@@ -85,12 +113,15 @@ $q_uk = mysqli_query($conn, "
     <strong>Kriteria Unjuk Kerja:</strong>
     <ul>
         <?
+        // Ambil KUK berdasarkan elemen dan unit kompetensi
         $q_kuk = mysqli_query($conn, "
             SELECT kuk
             FROM sk_skema_elemen
             WHERE id_uk = '".$uk['id']."'
             AND elemen = '".mysqli_real_escape_string($conn,$el['elemen'])."'
         ");
+
+        // Tampilkan KUK
         $no_kuk = 1;
         while ($k = mysqli_fetch_assoc($q_kuk)) {
         ?>
@@ -107,31 +138,39 @@ $q_uk = mysqli_query($conn, "
     </ul>
     <div class="row mb-2">
         <div class="col-md-4">
+            <?
+            // Ambil nilai penilaian jika ada
+            $nilai = $apl02_detail[$uk['id']][$el['id_elemen']]['penilaian'] ?? '';
+            ?>
             <label>
                 <input type="radio"
                       name="penilaian[<?= $uk['id']; ?>][<?= $el['id_elemen']; ?>]"
-                       value="K" required> Kompeten
+                       value="K" <?= $nilai == 'K' ? 'checked' : '' ?> required <?= $canEdit ? '' : 'disabled' ?>> Kompeten
             </label>
             &nbsp;&nbsp;
             <label>
                 <input type="radio"
                        name="penilaian[<?= $uk['id']; ?>][<?= $el['id_elemen']; ?>]"
-                       value="BK"> Belum Kompeten
+                       value="BK" <?= $nilai == 'BK' ? 'checked' : '' ?> <?= $canEdit ? '' : 'disabled' ?>> Belum Kompeten
             </label>
         </div>
 
         <div class="col-md-8">
+            <? 
+            // Ambil bukti pendukung jika ada
+            $id_bukti_pendukung = $apl02_detail[$uk['id']][$el['id_elemen']]['bukti'] ?? '';
+            ?>
             <select name="bukti[<?= $uk['id']; ?>][<?= $el['id_elemen']; ?>]"
-                    class="form-control" required>
+                    class="form-control" required <?= $canEdit ? '' : 'disabled' ?>>
                 <option value="">-- Pilih Bukti Pendukung --</option>
                 <?
                 $q_bukti = mysqli_query($conn, "
                     SELECT id, bukti_persyaratan
                     FROM sr_apl01_bukti
-                    WHERE id_apl01 = '".$apl['id_apl01']."'
+                    WHERE id_apl01 = '".$apl02['id_apl01']."'
                 ");
                 while ($b = mysqli_fetch_assoc($q_bukti)) {
-                    echo "<option value='{$b['id']}'>{$b['bukti_persyaratan']}</option>";
+                    echo "<option value='{$b['id']}' ".($id_bukti_pendukung == $b['id'] ? 'selected' : '').">{$b['bukti_persyaratan']}</option>";
                 }
                 ?>
             </select>
@@ -144,7 +183,9 @@ $q_uk = mysqli_query($conn, "
 </div>
 <? } ?>
 
-<? if ($apl['status_apl02'] == 'draft') { ?>
+<?
+// Tombol Simpan & Submit hanya muncul jika boleh edit
+if ($canEdit) { ?>
 <button type="submit" class="btn btn-primary">
     Simpan & Submit APL-02
 </button>

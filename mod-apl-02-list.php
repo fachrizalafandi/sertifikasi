@@ -102,15 +102,17 @@ if ($sub == "") {
         // menentukan action berdasarkan status
         $status = $row['status'];
         $textAction = $_SESSION['hak_akses'] == 'asessi' ? 'Edit' : 'View';
-        $action="<a href='javascript:void(0)' data-toggle='dropdown'><i class='fas fa-bars fa-sm text-gray-800-50'></i></a>
-            <ul class='dropdown-menu'>
-                <li><a href='javascript:void(0)' onclick=edit('".$row["sha"]."')>$textAction</a></li>
-            </ul>";
+        $action = "
+            <a href='javascript:void(0)' onclick=edit('".$row["sha"]."') data-toggle='tooltip' title='$textAction APL-02'>
+                <i class='fa fa-edit'></i>
+            </a>";
 
         if($row['status']=="draft"){
             $badge_class="secondary";
         } elseif($row['status']=="submitted"){
             $badge_class="info";
+        } elseif($row['status']=="processed"){
+            $badge_class="warning";
         } elseif($row['status']=="verified"){
             $badge_class="primary";
         } elseif($row['status']=="approved"){

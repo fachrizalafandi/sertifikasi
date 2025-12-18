@@ -1,7 +1,7 @@
 /*
  Navicat Premium Dump SQL
 
- Source Server         : mysql localhost
+ Source Server         : localhost mysql
  Source Server Type    : MySQL
  Source Server Version : 80403 (8.4.3)
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 80403 (8.4.3)
  File Encoding         : 65001
 
- Date: 18/12/2025 16:00:28
+ Date: 18/12/2025 21:40:03
 */
 
 SET NAMES utf8mb4;
@@ -411,12 +411,13 @@ CREATE TABLE `sr_apl01`  (
   `sha` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sr_apl01
 -- ----------------------------
-INSERT INTO `sr_apl01` VALUES (1, 3, '2025-12-18', 77, 'Sertifikasi', '9aab179f46477b93cae2516927b8f436', 'submitted');
+INSERT INTO `sr_apl01` VALUES (1, 3, '2025-12-18', 77, 'Sertifikasi', '9aab179f46477b93cae2516927b8f436', 'processed');
+INSERT INTO `sr_apl01` VALUES (3, 3, '2025-12-18', 77, 'Sertifikasi Ulang', '5949aa5081c217de58e34821de3a7275', 'processed');
 
 -- ----------------------------
 -- Table structure for sr_apl01_bukti
@@ -429,7 +430,7 @@ CREATE TABLE `sr_apl01_bukti`  (
   `file_bukti_persyaratan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `sha` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sr_apl01_bukti
@@ -439,6 +440,9 @@ INSERT INTO `sr_apl01_bukti` VALUES (2, 1, 'Ijazah S1', '3_mochammad_fachrizal_a
 INSERT INTO `sr_apl01_bukti` VALUES (3, 1, 'Surat Keterangan Magang', '3_mochammad_fachrizal_afandi_77_b0aacd003d145c441e68b459bd3b4758.pdf', '1fb4268036eaef98509bc1eea6e4aacb');
 INSERT INTO `sr_apl01_bukti` VALUES (4, 1, 'Sertifikat Pelatihan Analisis Lab', '3_mochammad_fachrizal_afandi_77_0a4738d34ea59406d68f6a2d86333c88.pdf', 'a1669133df325cc318b9ea8d5df2b4fd');
 INSERT INTO `sr_apl01_bukti` VALUES (5, 1, 'Surat Keterangan Pengalaman Kerja', '3_mochammad_fachrizal_afandi_77_6e9484eec18ceb8fa8dd3409337ea676.pdf', 'ff19e9e936507262fdeaddfee8bccb08');
+INSERT INTO `sr_apl01_bukti` VALUES (7, 3, 'Ijazah SMK', '3_mochammad_fachrizal_afandi_77_e47f62ab010df96a0ce727fa28bbb043.pdf', 'c0d59c688ea59c7fa5639eb54240b1f6');
+INSERT INTO `sr_apl01_bukti` VALUES (8, 3, 'Sertifikat Pelatihan Analisis Lab', '3_mochammad_fachrizal_afandi_77_0b000edf274fe9bea217e32e06a539e2.pdf', 'ac53251bc043828164495300c8cb11c0');
+INSERT INTO `sr_apl01_bukti` VALUES (9, 3, 'Surat Keterangan Magang', '3_mochammad_fachrizal_afandi_77_14e0e08e7ba7498a35ec3a17d0d17b31.pdf', '195aa4d14c23dd10999c90be7b43fdbe');
 
 -- ----------------------------
 -- Table structure for sr_apl02
@@ -451,12 +455,13 @@ CREATE TABLE `sr_apl02`  (
   `tgl_submit` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `sha` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sr_apl02
 -- ----------------------------
-INSERT INTO `sr_apl02` VALUES (1, 1, 'submitted', '2025-12-18 16:00:03', '3e1bfe1002c5feefb26688c7f6cc7652');
+INSERT INTO `sr_apl02` VALUES (1, 1, 'submitted', '2025-12-18 20:34:05', '3e1bfe1002c5feefb26688c7f6cc7652');
+INSERT INTO `sr_apl02` VALUES (3, 3, 'submitted', '2025-12-18 21:39:00', '3c73d5f274719fde7bfbe12b617c23d3');
 
 -- ----------------------------
 -- Table structure for sr_apl02_detail
@@ -470,7 +475,7 @@ CREATE TABLE `sr_apl02_detail`  (
   `penilaian` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `id_bukti_persyaratan` int NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 82 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sr_apl02_detail
@@ -501,7 +506,34 @@ INSERT INTO `sr_apl02_detail` VALUES (23, 1, 8, 207, 'K', 1);
 INSERT INTO `sr_apl02_detail` VALUES (24, 1, 9, 209, 'BK', 4);
 INSERT INTO `sr_apl02_detail` VALUES (25, 1, 9, 211, 'K', 5);
 INSERT INTO `sr_apl02_detail` VALUES (26, 1, 9, 214, 'K', 1);
-INSERT INTO `sr_apl02_detail` VALUES (27, 1, 9, 218, 'BK', 4);
+INSERT INTO `sr_apl02_detail` VALUES (27, 1, 9, 218, 'K', 5);
+INSERT INTO `sr_apl02_detail` VALUES (55, 3, 1, 151, 'K', 7);
+INSERT INTO `sr_apl02_detail` VALUES (56, 3, 1, 154, 'BK', 7);
+INSERT INTO `sr_apl02_detail` VALUES (57, 3, 2, 135, 'K', 7);
+INSERT INTO `sr_apl02_detail` VALUES (58, 3, 2, 138, 'K', 8);
+INSERT INTO `sr_apl02_detail` VALUES (59, 3, 2, 141, 'BK', 9);
+INSERT INTO `sr_apl02_detail` VALUES (60, 3, 3, 161, 'K', 7);
+INSERT INTO `sr_apl02_detail` VALUES (61, 3, 3, 163, 'BK', 8);
+INSERT INTO `sr_apl02_detail` VALUES (62, 3, 3, 165, 'K', 9);
+INSERT INTO `sr_apl02_detail` VALUES (63, 3, 4, 168, 'K', 9);
+INSERT INTO `sr_apl02_detail` VALUES (64, 3, 4, 170, 'K', 8);
+INSERT INTO `sr_apl02_detail` VALUES (65, 3, 4, 172, 'BK', 9);
+INSERT INTO `sr_apl02_detail` VALUES (66, 3, 5, 175, 'K', 8);
+INSERT INTO `sr_apl02_detail` VALUES (67, 3, 5, 178, 'K', 9);
+INSERT INTO `sr_apl02_detail` VALUES (68, 3, 5, 180, 'K', 8);
+INSERT INTO `sr_apl02_detail` VALUES (69, 3, 6, 183, 'K', 7);
+INSERT INTO `sr_apl02_detail` VALUES (70, 3, 6, 186, 'BK', 9);
+INSERT INTO `sr_apl02_detail` VALUES (71, 3, 6, 190, 'BK', 7);
+INSERT INTO `sr_apl02_detail` VALUES (72, 3, 7, 192, 'K', 8);
+INSERT INTO `sr_apl02_detail` VALUES (73, 3, 7, 195, 'K', 9);
+INSERT INTO `sr_apl02_detail` VALUES (74, 3, 7, 200, 'K', 7);
+INSERT INTO `sr_apl02_detail` VALUES (75, 3, 8, 202, 'K', 8);
+INSERT INTO `sr_apl02_detail` VALUES (76, 3, 8, 205, 'BK', 8);
+INSERT INTO `sr_apl02_detail` VALUES (77, 3, 8, 207, 'K', 9);
+INSERT INTO `sr_apl02_detail` VALUES (78, 3, 9, 209, 'K', 8);
+INSERT INTO `sr_apl02_detail` VALUES (79, 3, 9, 211, 'K', 7);
+INSERT INTO `sr_apl02_detail` VALUES (80, 3, 9, 214, 'BK', 8);
+INSERT INTO `sr_apl02_detail` VALUES (81, 3, 9, 218, 'BK', 7);
 
 -- ----------------------------
 -- Table structure for sr_registrasi

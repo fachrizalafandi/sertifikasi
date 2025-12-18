@@ -66,6 +66,33 @@ if ($sub == "") {
             exit;
         }
 
+        // Sementara untuk testing tidak diaktifkan
+        // =========================
+        // VALIDASI APL-01 MASIH AKTIF
+        // =========================
+        // $cek_aktif = mysqli_query($conn,"
+        //     SELECT id, status
+        //     FROM sr_apl01
+        //     WHERE id_registrasi = '$id_registrasi'
+        //     AND id_klaster = '$id_klaster'
+        //     AND status IN ('draft','submitted','processed','in_review')
+        //     ".($sha_apl01 != '' ? "AND sha != '$sha_apl01'" : "")."
+        //     LIMIT 1
+        // ");
+
+        // if (mysqli_num_rows($cek_aktif) > 0) {
+        //     $d_aktif = mysqli_fetch_assoc($cek_aktif);
+
+        //     echo "<script>
+        //         parent.swal(
+        //             'Pengajuan Masih Berjalan',
+        //             'Anda masih memiliki APL-01 untuk klaster ini yang belum selesai diproses.',
+        //             'info'
+        //         );
+        //     </script>";
+        //     exit;
+        // }
+
         /* =========================
            MODE EDIT
         ========================= */

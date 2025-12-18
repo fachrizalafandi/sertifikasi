@@ -12,6 +12,7 @@ if ($sub == "") {
     $id_apl01 = 0;
     $data_apl01 = [];
     $bukti_lama = [];
+    $canEdit = true;
 
     if (!empty($_GET['sha'])) {
         // MODE EDIT
@@ -41,10 +42,16 @@ if ($sub == "") {
         while ($r = mysqli_fetch_assoc($qb)) {
             $bukti_lama[] = $r;
         }
+
+        // Cek apakah boleh edit atau tidak
+        if (in_array($data_apl01['status'], ['draft', 'submitted'])) {
+            $canEdit = true;
+        } else {
+            $canEdit = false;
+        }
     }
 
     $isAsessi = $_SESSION['hak_akses'] == 'asessi' ? true : false;
-
 ?>
 
 <form class="user" method="post" enctype="multipart/form-data" action="<?=$_SESSION['domain'];?>/proses?mod=<?= $mod ?>&act=add" target="inframe">
@@ -68,7 +75,7 @@ if ($sub == "") {
         ?>
         <div class="col-md-6 mb-3">
             Skema Sertifikasi <span class="text-danger">*</span>
-            <select id="select_skema" name="id_skema" class="form-control" required <?= $isAsessi ? '' : 'disabled' ?>>
+            <select id="select_skema" name="id_skema" class="form-control" required <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?> >
                 <option value="">PILIH</option>
                 <?
                     $q_skema = mysqli_query($conn,"SELECT * FROM sk_skema WHERE id_lsp='".$_SESSION['id_lsp']."' ORDER BY skema ASC");
@@ -81,7 +88,7 @@ if ($sub == "") {
 
 		<div class="col-md-6 mb-3">
 			Klaster <span class="text-danger">*</span>
-			<select class="form-control" name="id_klaster" id="select_klaster" required <?= $isAsessi ? '' : 'disabled' ?>>
+			<select class="form-control" name="id_klaster" id="select_klaster" required <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
                 <option value="">Silahkan Pilih Skema Terlebih Dahulu</option>
                 <?
                     $q_klaster_all = mysqli_query($conn,"SELECT * FROM sk_skema_klaster WHERE id_skema_sertifikasi = '".$d_klaster['id_skema_sertifikasi']."'");
@@ -95,7 +102,7 @@ if ($sub == "") {
 
         <div class="col-md-6 mb-3">
             Tujuan Asesmen <span class="text-danger">*</span>
-            <select name="tujuan_asesmen" id="tujuan_asesmen" class="form-control" required <?= $isAsessi ? '' : 'disabled' ?>>
+            <select name="tujuan_asesmen" id="tujuan_asesmen" class="form-control" required <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
                 <option value="">PILIH</option>
                 <option value="Sertifikasi" <?= $data_apl01['tujuan_asesmen'] == 'Sertifikasi' ? 'selected' : '' ?>>Sertifikasi</option>
                 <option value="Sertifikasi Ulang" <?= $data_apl01['tujuan_asesmen'] == 'Sertifikasi Ulang' ? 'selected' : '' ?>>Sertifikasi Ulang</option>
@@ -109,7 +116,7 @@ if ($sub == "") {
             Tanggal Pengajuan
             <input type="date" class="form-control"
                    value="<?= $data_apl01 ? $data_apl01['tgl_pengajuan'] : date('Y-m-d');?>"
-                   readonly <?= $isAsessi ? '' : 'disabled' ?>>
+                   <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
         </div>
     </div>
 
@@ -251,7 +258,7 @@ if ($sub == "") {
 
                         <td class="text-center">
                             <button type="button"
-                                    class="btn btn-danger btn-remove-bukti" <?= $isAsessi ? '' : 'disabled' ?>>
+                                    class="btn btn-danger btn-remove-bukti" <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
                                 &times;
                             </button>
                         </td>
@@ -263,16 +270,16 @@ if ($sub == "") {
                     <input type="text"
                         name="bukti_persyaratan[]"
                         class="form-control"
-                        placeholder="Keterangan bukti" required <?= $isAsessi ? '' : 'disabled' ?>>
+                        placeholder="Keterangan bukti" required <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
                 </td>
                 <td>
                     <input type="file"
                         name="file_bukti_persyaratan[]"
-                        class="form-control" required <?= $isAsessi ? '' : 'disabled' ?>>
+                        class="form-control" required <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
                 </td>
                 <td class="text-center">
                     <button type="button"
-                            class="btn btn-danger btn-remove-bukti" <?= $isAsessi ? '' : 'disabled' ?>>
+                            class="btn btn-danger btn-remove-bukti" <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
                         &times;
                     </button>
                 </td>
@@ -281,13 +288,14 @@ if ($sub == "") {
     </table>
 
 
-    <button type="button" class="btn btn-secondary btn-sm mb-3" id="btn-add-bukti" <?= $isAsessi ? '' : 'disabled' ?>>
+    <button type="button" class="btn btn-secondary btn-sm mb-3" id="btn-add-bukti" <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
         <i class="fa fa-plus"></i> Tambah Bukti
     </button>
 
     <!-- ================= SUBMIT ================= -->
      <?
      if($_SESSION['hak_akses'] == 'asessi'){
+        if($canEdit){
      ?>
     <hr>
     <div class="text-left">
@@ -302,6 +310,13 @@ if ($sub == "") {
         </button>
     </div>
     <?
+        } else {
+            ?>
+            <div class="alert alert-warning">
+                APL-01 sudah diproses dan tidak dapat diubah.
+            </div>
+            <?
+        }
     }
     ?>
 

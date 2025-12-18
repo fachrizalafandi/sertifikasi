@@ -18,7 +18,8 @@ if ($sub == "") {
             SELECT 
                 a2.id,
                 a2.status,
-                a1.id_registrasi
+                a1.id_registrasi,
+                a2.id_apl01
             FROM sr_apl02 a2
             JOIN sr_apl01 a1 ON a1.id = a2.id_apl01
             WHERE a2.sha = '$sha_apl02'
@@ -43,7 +44,7 @@ if ($sub == "") {
         // ==========================
         // VALIDASI STATUS
         // ==========================
-        if ($apl02['status'] != 'draft') {
+        if (!in_array($apl02['status'], ['draft', 'submitted'])) {
             echo "<script>
                 parent.swal(
                     'Informasi',
@@ -98,6 +99,17 @@ if ($sub == "") {
                 status = 'submitted',
                 tgl_submit = NOW()
             WHERE id = '$id_apl02'
+        ");
+
+        $txt_update_status_apl01 = "
+            UPDATE sr_apl01 SET
+                status = 'processed'
+            WHERE id = '".$apl02['id_apl01']."'
+        ";
+        mysqli_query($conn, "
+            UPDATE sr_apl01 SET
+                status = 'processed'
+            WHERE id = '".$apl02['id_apl01']."'
         ");
 
         ?>
