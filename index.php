@@ -275,11 +275,11 @@
                                   });
                               }
 
-                              function edit(sha)
+                              function edit(sha, act="")
                               {
                                   $(document).ready(function(){
                                       $('#window-modal').modal('show');
-                                      $("#content-modal").load("<?=$_SESSION["domain"];?>/form?mod=<?=$mod;?>&sub=<?=$sub;?>&sha="+sha);
+                                      $("#content-modal").load("<?=$_SESSION["domain"];?>/form?mod=<?=$mod;?>&sub=<?=$sub;?>&sha="+sha+"&act="+act);
                                   });
                               }
 
