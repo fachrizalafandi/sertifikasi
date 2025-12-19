@@ -102,8 +102,9 @@ if ($sub == "") {
         // menentukan action berdasarkan status
         $status = $row['status'];
         $textAction = $_SESSION['hak_akses'] == 'asessi' ? 'Edit' : 'View';
+        $editParam = $_SESSION['hak_akses'] == 'asessi' ? '' : 'admin';
         $action = "
-            <a href='javascript:void(0)' onclick=edit('".$row["sha"]."') data-toggle='tooltip' title='$textAction APL-02'>
+            <a href='javascript:void(0)' onclick=edit('".$row["sha"]."','$editParam') data-toggle='tooltip' title='$textAction APL-02'>
                 <i class='fa fa-edit'></i>
             </a>";
 
