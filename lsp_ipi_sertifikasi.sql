@@ -1,7 +1,7 @@
 /*
  Navicat Premium Dump SQL
 
- Source Server         : localhost mysql
+ Source Server         : mysql localhost
  Source Server Type    : MySQL
  Source Server Version : 80403 (8.4.3)
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 80403 (8.4.3)
  File Encoding         : 65001
 
- Date: 18/12/2025 21:40:03
+ Date: 19/12/2025 12:26:55
 */
 
 SET NAMES utf8mb4;
@@ -460,7 +460,7 @@ CREATE TABLE `sr_apl02`  (
 -- ----------------------------
 -- Records of sr_apl02
 -- ----------------------------
-INSERT INTO `sr_apl02` VALUES (1, 1, 'submitted', '2025-12-18 20:34:05', '3e1bfe1002c5feefb26688c7f6cc7652');
+INSERT INTO `sr_apl02` VALUES (1, 1, 'submitted', '2025-12-19 10:04:45', '3e1bfe1002c5feefb26688c7f6cc7652');
 INSERT INTO `sr_apl02` VALUES (3, 3, 'submitted', '2025-12-18 21:39:00', '3c73d5f274719fde7bfbe12b617c23d3');
 
 -- ----------------------------
@@ -480,7 +480,7 @@ CREATE TABLE `sr_apl02_detail`  (
 -- ----------------------------
 -- Records of sr_apl02_detail
 -- ----------------------------
-INSERT INTO `sr_apl02_detail` VALUES (1, 1, 1, 151, 'K', 1);
+INSERT INTO `sr_apl02_detail` VALUES (1, 1, 1, 151, 'BK', 1);
 INSERT INTO `sr_apl02_detail` VALUES (2, 1, 1, 154, 'K', 2);
 INSERT INTO `sr_apl02_detail` VALUES (3, 1, 2, 135, 'K', 3);
 INSERT INTO `sr_apl02_detail` VALUES (4, 1, 2, 138, 'K', 4);
@@ -506,7 +506,7 @@ INSERT INTO `sr_apl02_detail` VALUES (23, 1, 8, 207, 'K', 1);
 INSERT INTO `sr_apl02_detail` VALUES (24, 1, 9, 209, 'BK', 4);
 INSERT INTO `sr_apl02_detail` VALUES (25, 1, 9, 211, 'K', 5);
 INSERT INTO `sr_apl02_detail` VALUES (26, 1, 9, 214, 'K', 1);
-INSERT INTO `sr_apl02_detail` VALUES (27, 1, 9, 218, 'K', 5);
+INSERT INTO `sr_apl02_detail` VALUES (27, 1, 9, 218, 'BK', 1);
 INSERT INTO `sr_apl02_detail` VALUES (55, 3, 1, 151, 'K', 7);
 INSERT INTO `sr_apl02_detail` VALUES (56, 3, 1, 154, 'BK', 7);
 INSERT INTO `sr_apl02_detail` VALUES (57, 3, 2, 135, 'K', 7);
@@ -564,12 +564,13 @@ CREATE TABLE `sr_registrasi`  (
   `no_fax` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `email_kantor` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sr_registrasi
 -- ----------------------------
 INSERT INTO `sr_registrasi` VALUES (1, 1, 'alifikri.mail@gmail.com', '9fe33', 'Ahmad Ali Fikri', '7f3c430716b0e2731edcf6825dcc9074', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `sr_registrasi` VALUES (3, 1, 'fachrizalafandi13@gmail.com', 'rizal123', 'Mochammad Fachrizal Afandi', 'e6e4a3eeef9d132e826f8c2d306d1818', '3525121303980002', 'Gresik', '1998-03-13', 'laki-laki', 'Indonesia', 'Tanggulrejo Utara No. 31 RT 03 RW 01 Desa Tanggulrejo Kec. Manyar Kab. Gresik', '61151', '085854541938', '', 'S1 Pendidikan Tenik Informatika', 'Dinas Pendidikan Kabupaten Gresik', 'Pengembang Teknologi Pembelajaran Ahli Pertama', 'Jl. Arif Rahman Hakim No. 2 Gresik', '61111', '', '', '');
+INSERT INTO `sr_registrasi` VALUES (4, 1, 'aidakhumaidah03@gmail.com', 'aida123', 'Khumaidah', 'eec258f0452564e6f5f8da6234827231380452e282872de0cd2b7eda5f199d39', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
