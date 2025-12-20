@@ -508,8 +508,95 @@
         }
         else
         {
-    ?>
-        <div class="form-group">
+        $q_uk = mysqli_query($conn, "
+            SELECT id, kode, unit_kompetensi
+            FROM sk_skema_uk
+            WHERE id_klaster = '$data[id]'
+            ORDER BY kode ASC
+        ");
+        ?>
+
+        <?php while ($uk = mysqli_fetch_assoc($q_uk)) { ?>
+            <!-- CARD UNIT KOMPETENSI -->
+            <div class="card mb-4">
+                <div class="card-header" style="background:#f8f9fa;">
+                    <strong><?= $uk['kode']; ?></strong> – <?= $uk['unit_kompetensi']; ?>
+                </div>
+
+                <div class="card-body">
+
+                <?php
+                // ambil elemen unik (karena elemen bisa berulang)
+                $q_elemen = mysqli_query($conn, "
+                    SELECT 
+                        MIN(id) AS id_elemen,
+                        elemen
+                    FROM sk_skema_elemen
+                    WHERE id_uk = '".$uk['id']."'
+                    GROUP BY elemen
+                    ORDER BY id_elemen ASC
+                ");
+
+                $no_elemen = 1;
+                while ($el = mysqli_fetch_assoc($q_elemen)) {
+                ?>
+
+                    <!-- BLOK ELEMEN -->
+                    <div class="mb-4 p-3" style="
+                        background:#f9fafb;
+                        border:1px solid #DEDCDC;
+                        border-radius:4px;
+                    ">
+                        <div class="mb-2">
+                            <strong>Elemen <?= $no_elemen; ?></strong> - <?= $el['elemen']; ?> 
+                        </div>
+
+                        <hr>
+
+                        <strong>Kriteria Unjuk Kerja:</strong>
+
+                        <div class="mt-2">
+                        <?php
+                        $q_kuk = mysqli_query($conn, "
+                            SELECT kuk
+                            FROM sk_skema_elemen
+                            WHERE id_uk = '".$uk['id']."'
+                            AND elemen = '".mysqli_real_escape_string($conn, $el['elemen'])."'
+                            ORDER BY id ASC
+                        ");
+
+                        $no_kuk = 1;
+                        while ($kuk = mysqli_fetch_assoc($q_kuk)) {
+                        ?>
+                            <div style="display:flex; gap:10px; margin-bottom:6px;">
+                                <div style="width:40px; color:#6c757d;">
+                                    <?= $no_elemen . '.' . $no_kuk; ?>
+                                </div>
+                                <div>
+                                    <?= $kuk['kuk']; ?>
+                                </div>
+                            </div>
+                        <?php
+                            $no_kuk++;
+                        }
+                        ?>
+                        </div>
+                    </div>
+                    <!-- END BLOK ELEMEN -->
+
+                <?php
+                    $no_elemen++;
+                }
+                ?>
+
+                </div>
+            </div>
+        <?php } ?>
+
+
+
+
+        <!-- <div class="form-group">
             Unit Kompetensi
         </div>
         <div class="form-group">
@@ -608,7 +695,7 @@
                 });
 
             });
-            </script>
+            </script> -->
 
     <?
         }
