@@ -60,23 +60,37 @@ if ($sub == "") {
         }
 
         ?>
-        <h3><?= $apl02["skema"] ?></h3>
-        <spam><?= $apl02["nomor"] ?> - <?= $apl02["klaster"] ?></spam>
+        <h3 class="mb-3">FR.APL-02 – ASESMEN MANDIRI</h3>
 
-        <hr>
+        <table class="table table-bordered">
+            <tr>
+                <td width="20%">Skema Sertifikasi</td>
+                <td width="80%"><strong><?= $apl02['skema']; ?></strong></td>
+            </tr>
+            <tr>
+                <td>Nomor</td>
+                <td><?= $apl02['nomor']; ?> – <?= $apl02['klaster']; ?></td>
+            </tr>
+        </table>
 
-        <div class="alert alert-info">
-            <strong>PANDUAN ASESMEN MANDIRI</strong>
-            <hr class="my-2">
-            <strong>Instruksi:</strong>
-            <ul class="mb-0">
-                <li>Bacalah setiap Elemen Kompetensi dan Kriteria Unjuk Kerja yang ditampilkan dengan saksama.</li>
-                <li>Tentukan penilaian Anda dengan memilih:
-                    <strong>Kompeten (K)</strong> atau <strong>Belum Kompeten (BK)</strong> pada setiap Elemen Kompetensi.</li>
-                <li>Pilih bukti pendukung yang relevan untuk menunjukkan bahwa Anda telah melaksanakan tugas atau aktivitas tersebut.</li>
-                <li>Pastikan seluruh Elemen Kompetensi telah diisi sebelum mengirimkan Asesmen Mandiri.</li>
-            </ul>
-        </div>
+        <table class="table table-bordered">
+            <tr>
+                <td class="alert-warning">
+                    <strong>PANDUAN ASESMEN MANDIRI</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Instruksi</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>Baca setiap pertanyaan pada kolom sebelah kiri.</li>
+                        <li>Beri tanda pada kolom <strong>K</strong> atau <strong>BK</strong> jika Anda yakin dapat melakukan tugas yang dijelaskan.</li>
+                        <li>Isi kolom sebelah kanan dengan bukti pendukung yang Anda miliki untuk menunjukkan bahwa Anda melakukan tugas-tugas ini.</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+
 
         <?
         // Ambil unit kompetensi berdasarkan klaster
@@ -88,136 +102,146 @@ if ($sub == "") {
         ");
         ?>
 
-        <form method="post" action="<?= $_SESSION[
-            "domain"
-        ] ?>/proses?mod=<?= $mod ?>&act=add" target="inframe">
-        <input type="hidden" name="sha_apl02" value="<?= $apl02["sha_apl02"] ?>">
+        <form method="post"
+            action="<?= $_SESSION['domain']; ?>/proses?mod=<?= $mod ?>&act=add"
+            target="inframe">
 
-        <? while ($uk = mysqli_fetch_assoc($q_uk)) { ?>
-        <div class="card mb-3">
-            <div class="card-header" style="background-color: #faf7cf;">
-                <strong><?= $uk["kode"] ?></strong> – <?= $uk["unit_kompetensi"] ?>
-            </div>
-            <div class="card-body">
-            <?
-            // Ambil elemen berdasarkan unit kompetensi
+        <input type="hidden" name="sha_apl02" value="<?= $apl02['sha_apl02']; ?>">
+
+        <?
+        $no_uk = 0;
+        while ($uk = mysqli_fetch_assoc($q_uk)) {
+            $no_uk++;
+        ?>
+
+        <!-- ================= UNIT KOMPETENSI ================= -->
+        <table class="table table-bordered mt-4">
+            <tr>
+                <td colspan="4">
+                    <table class="table table-bordered mb-0 alert-warning">
+                        <tr>
+                            <td rowspan="2" width="20%" class="text-center align-middle"><strong>KODE & JUDUL KOMPETENSI <?= $no_uk ?></strong></td>
+                            <td><strong><?= $uk['kode']; ?></strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong><?= $uk['unit_kompetensi']; ?></strong></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="text-center">
+                <th width="60%">Dapatkah saya…?</th>
+                <th width="5%">K</th>
+                <th width="5%">BK</th>
+                <th width="30%">Bukti yang Relevan</th>
+            </tr>
+
+            <?php
+            // Ambil elemen unik
             $q_elemen = mysqli_query($conn, "
                 SELECT 
-                    MIN(id) AS id_elemen, 
+                    MIN(id) AS id_elemen,
                     elemen
                 FROM sk_skema_elemen
                 WHERE id_uk = '".$uk['id']."'
                 GROUP BY elemen
                 ORDER BY id_elemen ASC
-            "); // pakai min karena elemen bisa muncul lebih dari sekali, sehingga diambil yang pertama saja
+            ");
 
-            $no_elemen = 1;
+            $no_elemen = 0;
             while ($el = mysqli_fetch_assoc($q_elemen)) {
+                $no_elemen++;
+                $nilai = $apl02_detail[$uk['id']][$el['id_elemen']]['penilaian'] ?? '';
+                $id_bukti_pendukung = $apl02_detail[$uk['id']][$el['id_elemen']]['bukti'] ?? '';
             ?>
-            <div class="mb-3">
-            <strong>Elemen <?= $no_elemen ?>:</strong>
-            <div class="mb-2"><?= $el["elemen"] ?></div>
-
-            <strong>Kriteria Unjuk Kerja:</strong>
-            <ul>
-                <?
-                // Ambil KUK berdasarkan elemen dan unit kompetensi
-                $q_kuk = mysqli_query($conn, "
-                    SELECT kuk
-                    FROM sk_skema_elemen
-                    WHERE id_uk = '".$uk['id']."'
-                    AND elemen = '".mysqli_real_escape_string($conn,$el['elemen'])."'
-                ");
-
-                // Tampilkan KUK
-                $no_kuk = 1;
-                while ($k = mysqli_fetch_assoc($q_kuk)) {
-                ?>
-                    <table width="100%" cellpadding="2" cellspacing="0" border="0">
-                        <tr>
-                            <td width="20px" valign="top"><?= $no_elemen .
-                                "." .
-                                $no_kuk ?></td>
-                            <td valign="top"><?= $k["kuk"] ?></td>
-                        </tr>
-                    </table>
-                <?
-                    $no_kuk++;
-                }
-                ?>
-            </ul>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <?
-                    // Ambil nilai penilaian jika ada
-                    $nilai = $apl02_detail[$uk['id']][$el['id_elemen']]['penilaian'] ?? '';
-                    ?>
-                    <label>
-                        <input type="radio"
-                            name="penilaian[<?= $uk["id"] ?>][<?= $el[
-        "id_elemen"
-    ] ?>]"
-                            value="K" <?= $nilai == "K"
-                                ? "checked"
-                                : "" ?> required <?= $canEdit
-        ? ""
-        : "disabled" ?>> Kompeten
-                    </label>
-                    &nbsp;&nbsp;
-                    <label>
-                        <input type="radio"
-                            name="penilaian[<?= $uk["id"] ?>][<?= $el[
-        "id_elemen"
-    ] ?>]"
-                            value="BK" <?= $nilai == "BK"
-                                ? "checked"
-                                : "" ?> <?= $canEdit
-        ? ""
-        : "disabled" ?>> Belum Kompeten
-                    </label>
-                </div>
-
-                <div class="col-md-8">
-                    <? 
-                    // Ambil bukti pendukung jika ada
-                    $id_bukti_pendukung = $apl02_detail[$uk['id']][$el['id_elemen']]['bukti'] ?? '';
-                    ?>
-                    <select name="bukti[<?= $uk["id"] ?>][<?= $el["id_elemen"] ?>]"
-                            class="form-control" required <?= $canEdit
-                                ? ""
-                                : "disabled" ?>>
-                        <option value="">-- Pilih Bukti Pendukung --</option>
+            <tr>
+                <!-- ELEMEN + KUK -->
+                <td>
+                    <strong>Elemen <?= $no_elemen ?> : <?= $el['elemen']; ?></strong>
+                    <div class="mt-2">
+                        <strong>Kriteria Unjuk Kerja:</strong>
+                        <?php
+                        $q_kuk = mysqli_query($conn, "
+                            SELECT kuk
+                            FROM sk_skema_elemen
+                            WHERE id_uk = '".$uk['id']."'
+                            AND elemen = '".mysqli_real_escape_string($conn, $el['elemen'])."'
+                            ORDER BY id ASC
+                        ");
+                        $no_kuk = 0;
+                        while ($k = mysqli_fetch_assoc($q_kuk)) {
+                            $no_kuk++;
+                            ?>
+                            <table class="table table-borderless mb-0 ml-0 mr-0 mt-2">
+                                <tr>
+                                    <td width="7%" class="p-0"><?= $no_elemen ?>.<?= $no_kuk ?></td>
+                                    <td class="p-0"><?= $k['kuk'] ?></td>
+                                </tr>
+                            </table>
                         <?
+                        }
+                        ?>
+                    </div>
+                </td>
+
+                <!-- K -->
+                <td class="text-center align-middle">
+                    <input type="radio"
+                        name="penilaian[<?= $uk['id']; ?>][<?= $el['id_elemen']; ?>]"
+                        value="K"
+                        <?= $nilai === 'K' ? 'checked' : ''; ?>
+                        <?= $canEdit ? '' : 'disabled'; ?>>
+                </td>
+
+                <!-- BK -->
+                <td class="text-center align-middle">
+                    <input type="radio"
+                        name="penilaian[<?= $uk['id']; ?>][<?= $el['id_elemen']; ?>]"
+                        value="BK"
+                        <?= $nilai === 'BK' ? 'checked' : ''; ?>
+                        <?= $canEdit ? '' : 'disabled'; ?>>
+                </td>
+
+                <!-- BUKTI -->
+                <td class="align-middle">
+                    <select name="bukti[<?= $uk['id']; ?>][<?= $el['id_elemen']; ?>]"
+                            class="form-control"
+                            <?= $canEdit ? '' : 'disabled'; ?>>
+                        <option value="">-- Pilih Bukti --</option>
+                        <?php
                         $q_bukti = mysqli_query($conn, "
                             SELECT id, bukti_persyaratan
                             FROM sr_apl01_bukti
                             WHERE id_apl01 = '".$apl02['id_apl01']."'
                         ");
                         while ($b = mysqli_fetch_assoc($q_bukti)) {
-                            echo "<option value='{$b['id']}' ".($id_bukti_pendukung == $b['id'] ? 'selected' : '').">{$b['bukti_persyaratan']}</option>";
+                            $selected = ($id_bukti_pendukung == $b['id']) ? 'selected' : '';
+                            echo "<option value='{$b['id']}' {$selected}>{$b['bukti_persyaratan']}</option>";
                         }
                         ?>
                     </select>
-                </div>
-            </div>
-        </div>
-        <hr>
-        <? $no_elemen++; } ?>
-            </div>
-        </div>
+                </td>
+            </tr>
+            <? } ?>
+        </table>
+
         <? } ?>
 
         <?
         // Tombol Simpan & Submit hanya muncul jika boleh edit
-        if ($canEdit) { ?>
-        <button type="submit" class="btn btn-primary">
-            Simpan & Submit APL-02
-        </button>
-        <? } else { ?>
-        <div class="alert alert-warning">
-            APL-02 sudah diproses dan tidak dapat diubah.
-        </div>
-        <? } ?>
+        if($_SESSION['hak_akses'] == 'asessi') {
+            if ($canEdit) { ?>
+            <button type="submit" class="btn btn-primary">
+                Simpan & Submit APL-02
+            </button>
+            <? } else { ?>
+            <div class="alert alert-warning">
+                APL-02 sudah diproses dan tidak dapat diubah.
+            </div>
+            <? }
+        }
+        ?>
 
         </form>
     <?
@@ -402,7 +426,17 @@ if ($sub == "") {
 
             <div class="form-group">
                 <label>TUK</label>
-                <input type="text" name="tuk" class="form-control" required>
+                <select name="tuk" class="form-control" required>
+                    <option value="">Pilih TUK</option>
+                    <?php
+                    $q = mysqli_query($conn,"SELECT id, nama_tuk FROM m_tuk WHERE id_lsp = '".$_SESSION['id_lsp']."' ORDER BY nama_tuk ASC");
+                    while($tuk=mysqli_fetch_assoc($q)){
+                    ?>
+                        <option value="<?= $tuk['id'] ?>"><?= $tuk['nama_tuk'] ?></option>
+                    <?
+                    }
+                    ?>
+                </select>
             </div>
 
             <div class="form-group">
