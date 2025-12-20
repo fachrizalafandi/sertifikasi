@@ -5,7 +5,6 @@ if ($sub == "") {
         ob_clean();
 
         $id_skema = intval($_GET['id_skema']);
-
         $data = [];
 
         $q = mysqli_query($conn,"
@@ -22,8 +21,8 @@ if ($sub == "") {
         echo json_encode($data);
         exit;
     }
-    elseif ($act == 'load-persyaratan') {
 
+    elseif ($act == "load-persyaratan") {
         header('Content-Type: application/json; charset=utf-8');
         ob_clean();
 
@@ -37,22 +36,42 @@ if ($sub == "") {
         ");
 
         $d = mysqli_fetch_assoc($q);
-
         $persyaratan = [];
 
-        if (!empty($d['persyaratan1'])) {
-            $persyaratan[] = $d['persyaratan1'];
-        }
-        if (!empty($d['persyaratan2'])) {
-            $persyaratan[] = $d['persyaratan2'];
-        }
-        if (!empty($d['persyaratan3'])) {
-            $persyaratan[] = $d['persyaratan3'];
-        }
+        if (!empty($d['persyaratan1'])) $persyaratan[] = $d['persyaratan1'];
+        if (!empty($d['persyaratan2'])) $persyaratan[] = $d['persyaratan2'];
+        if (!empty($d['persyaratan3'])) $persyaratan[] = $d['persyaratan3'];
 
         echo json_encode($persyaratan);
         exit;
     }
+
+    elseif ($act == "load-uk") {
+        header('Content-Type: application/json; charset=utf-8');
+        ob_clean();
+
+        $id_klaster = intval($_GET['id_klaster']);
+        $data = [];
+
+        $q = mysqli_query($conn,"
+            SELECT id, kode, unit_kompetensi
+            FROM sk_skema_uk
+            WHERE id_klaster = '$id_klaster'
+            ORDER BY kode ASC
+        ");
+
+        while ($r = mysqli_fetch_assoc($q)) {
+            $data[] = $r;
+        }
+
+        echo json_encode($data);
+        exit;
+    }
+
+    /* ===============================
+       ADD / EDIT APL-01
+    =============================== */
+
     elseif ($act == "add") {
 
         $id_registrasi = intval($_SESSION['id_user']);
@@ -92,6 +111,48 @@ if ($sub == "") {
         //     </script>";
         //     exit;
         // }
+
+        /* =====================================================
+           🔒 VALIDASI FILE PDF (WAJIB DI ATAS – SEBELUM INSERT)
+        ===================================================== */
+        if (!empty($_FILES['file_bukti_persyaratan']['name'])) {
+
+            foreach ($_FILES['file_bukti_persyaratan']['name'] as $i => $name) {
+
+                if ($name == '') continue;
+
+                $tmpFile = $_FILES['file_bukti_persyaratan']['tmp_name'][$i];
+
+                // cek MIME asli
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mime  = finfo_file($finfo, $tmpFile);
+                finfo_close($finfo);
+
+                if ($mime !== 'application/pdf') {
+                    echo "<script>
+                        parent.swal(
+                            'Error',
+                            'Semua bukti pendukung harus berupa file PDF',
+                            'error'
+                        );
+                    </script>";
+                    exit;
+                }
+
+                // cek ekstensi
+                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                if ($ext !== 'pdf') {
+                    echo "<script>
+                        parent.swal(
+                            'Error',
+                            'File bukti harus berformat PDF',
+                            'error'
+                        );
+                    </script>";
+                    exit;
+                }
+            }
+        }
 
         /* =========================
            MODE EDIT
@@ -133,8 +194,8 @@ if ($sub == "") {
                 WHERE id = '$id_apl01'
             ");
 
-            // hapus bukti lama
-           $existing = [];
+            // hapus bukti lama yang dihapus user
+            $existing = [];
             $q = mysqli_query($conn,"
                 SELECT sha, file_bukti_persyaratan
                 FROM sr_apl01_bukti
@@ -147,16 +208,13 @@ if ($sub == "") {
 
             $bukti_lama_sha = $_POST['bukti_lama_sha'] ?? [];
             $deleted = array_diff(array_keys($existing), $bukti_lama_sha);
+
             foreach ($deleted as $sha_bukti) {
-
-            // hapus file fisik
-            if (!empty($existing[$sha_bukti])) {
-                @unlink("data/bukti-apl-01/" . $existing[$sha_bukti]);
+                if (!empty($existing[$sha_bukti])) {
+                    @unlink("data/bukti-apl-01/" . $existing[$sha_bukti]);
+                }
+                mysqli_query($conn,"DELETE FROM sr_apl01_bukti WHERE sha = '$sha_bukti'");
             }
-
-            // hapus record DB
-            mysqli_query($conn,"DELETE FROM sr_apl01_bukti WHERE sha = '$sha_bukti'");
-        }
 
         }
 
@@ -176,64 +234,44 @@ if ($sub == "") {
 
             $id_apl01 = mysqli_insert_id($conn);
 
-            /* =========================
-            AUTO CREATE APL-02
-            ========================= */
+            // AUTO CREATE APL-02
+            $sha_apl02 = md5(uniqid(rand(), true));
 
-            // cek apakah apl02 sudah ada (antisipasi duplikasi)
-            $cek_apl02 = mysqli_query($conn,"
-                SELECT id FROM sr_apl02
-                WHERE id_apl01 = '$id_apl01'
-                LIMIT 1
+            mysqli_query($conn,"
+                INSERT INTO sr_apl02
+                (id_apl01, status, tgl_submit, sha)
+                VALUES
+                ('$id_apl01','draft',NULL,'$sha_apl02')
             ");
 
-            if (mysqli_num_rows($cek_apl02) == 0) {
+            $id_apl02 = mysqli_insert_id($conn);
 
-                $sha_apl02 = md5(uniqid(rand(), true));
+            $q_elemen = mysqli_query($conn,"
+                SELECT 
+                    uk.id AS id_uk,
+                    MIN(e.id) AS id_elemen
+                FROM sk_skema_uk uk
+                JOIN sk_skema_elemen e ON e.id_uk = uk.id
+                WHERE uk.id_klaster = '$id_klaster'
+                GROUP BY uk.id, e.elemen
+                ORDER BY uk.id ASC, id_elemen ASC
+            ");
 
-                // insert header apl02
+            while ($r = mysqli_fetch_assoc($q_elemen)) {
                 mysqli_query($conn,"
-                    INSERT INTO sr_apl02
-                    (id_apl01, status, tgl_submit, sha)
+                    INSERT INTO sr_apl02_detail
+                    (id_apl02, id_uk, id_elemen, penilaian, id_bukti_persyaratan)
                     VALUES
-                    ('$id_apl01','draft',NULL,'$sha_apl02')
+                    ('$id_apl02','".$r['id_uk']."','".$r['id_elemen']."',NULL,NULL)
                 ");
-
-                $id_apl02 = mysqli_insert_id($conn);
-
-                /* =========================
-                GENERATE ELEMEN APL-02 (berdasarkan klaster)
-                ========================= */
-
-                $q_elemen = mysqli_query($conn, "
-                    SELECT 
-                        uk.id AS id_uk,
-                        MIN(e.id) AS id_elemen
-                    FROM sk_skema_uk uk
-                    JOIN sk_skema_elemen e ON e.id_uk = uk.id
-                    WHERE uk.id_klaster = '$id_klaster'
-                    GROUP BY uk.id, e.elemen
-                    ORDER BY uk.id ASC, id_elemen ASC
-                ");
-
-
-                while ($r = mysqli_fetch_assoc($q_elemen)) {
-                    mysqli_query($conn, "
-                        INSERT INTO sr_apl02_detail
-                        (id_apl02, id_uk, id_elemen, penilaian, id_bukti_persyaratan)
-                        VALUES
-                        ('$id_apl02', '".$r['id_uk']."', '".$r['id_elemen']."', NULL, NULL)
-                    ");
-                }
             }
-
         }
 
         /* =========================
-           SIMPAN BUKTI
+           SIMPAN BUKTI (SUDAH LOLOS VALIDASI)
         ========================= */
         if (!empty($_POST['bukti_persyaratan'])) {
-            
+
             foreach ($_POST['bukti_persyaratan'] as $i => $bukti) {
 
                 if (trim($bukti) == "") continue;
@@ -243,18 +281,17 @@ if ($sub == "") {
 
                 if (!empty($_FILES['file_bukti_persyaratan']['name'][$i])) {
 
-                    $ext = pathinfo(
-                        $_FILES['file_bukti_persyaratan']['name'][$i],
-                        PATHINFO_EXTENSION
+                    $file_name = $id_registrasi . '_' .
+                        str_replace(' ', '_', strtolower($_SESSION["nama"])) . '_' .
+                        $id_klaster . '_' . md5(uniqid()) . '.pdf';
+
+                    move_uploaded_file(
+                        $_FILES['file_bukti_persyaratan']['tmp_name'][$i],
+                        "data/bukti-apl-01/" . $file_name
                     );
-
-                    $file_name = $id_registrasi . '_' . str_replace(' ', '_', strtolower($_SESSION["nama"])) . '_' . $id_klaster . '_' . md5(uniqid()) . '.' . $ext;
-
-                    move_uploaded_file($_FILES['file_bukti_persyaratan']['tmp_name'][$i], "data/bukti-apl-01/" . $file_name);
                 }
 
-                $angka=substr(md5(microtime()),rand(0,26),5);
-                $sha_bukti=md5(uniqid($angka, true));
+                $sha_bukti = md5(uniqid(rand(), true));
 
                 mysqli_query($conn,"
                     INSERT INTO sr_apl01_bukti
@@ -265,12 +302,11 @@ if ($sub == "") {
             }
         }
 
-
         ?>
         <script>
-            top.location.href="<?=$_SESSION["domain"];?>/<?=$mod;?>";
+            top.location.href = "<?= $_SESSION['domain']; ?>/<?= $mod; ?>";
         </script>
-        <?
+        <?php
         exit;
     }
 }

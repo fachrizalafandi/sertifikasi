@@ -54,76 +54,16 @@ if ($sub == "") {
     $isAsessi = $_SESSION['hak_akses'] == 'asessi' ? true : false;
 ?>
 
+<h3>FR.APL.01 - Permohonan Sertifikasi Kompetensi</h3>
+<hr>
+
 <form class="user" method="post" enctype="multipart/form-data" action="<?=$_SESSION['domain'];?>/proses?mod=<?= $mod ?>&act=add" target="inframe">
-
+    
     <input type="hidden" name="sha_apl01" value="<?=$data_apl01['sha'];?>">
-
-    <!-- ================= INFORMASI PENGAJUAN ================= -->
-    <h4>FR.APL.01 – Permohonan Sertifikasi Kompetensi</h4>
-    <hr>
-
-    <h5>Informasi Pengajuan</h5>
-    <div class="row">
-
-        <?
-            $q_klaster = mysqli_query($conn,"
-                SELECT *
-                FROM sk_skema_klaster
-                WHERE id = '".$data_apl01['id_klaster']."'
-                LIMIT 1");
-            $d_klaster = mysqli_fetch_assoc($q_klaster);
-        ?>
-        <div class="col-md-6 mb-3">
-            Skema Sertifikasi <span class="text-danger">*</span>
-            <select id="select_skema" name="id_skema" class="form-control" required <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?> >
-                <option value="">PILIH</option>
-                <?
-                    $q_skema = mysqli_query($conn,"SELECT * FROM sk_skema WHERE id_lsp='".$_SESSION['id_lsp']."' ORDER BY skema ASC");
-                    while($s = mysqli_fetch_assoc($q_skema)){
-                ?>
-                    <option value="<?=$s['id'];?>" <?= $d_klaster['id_skema_sertifikasi'] == $s['id'] ? 'selected' : '' ?>><?=$s['skema'];?></option>
-                <? } ?>
-            </select>
-        </div>
-
-		<div class="col-md-6 mb-3">
-			Klaster <span class="text-danger">*</span>
-			<select class="form-control" name="id_klaster" id="select_klaster" required <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
-                <option value="">Silahkan Pilih Skema Terlebih Dahulu</option>
-                <?
-                    $q_klaster_all = mysqli_query($conn,"SELECT * FROM sk_skema_klaster WHERE id_skema_sertifikasi = '".$d_klaster['id_skema_sertifikasi']."'");
-                    while($d_klaster_all = mysqli_fetch_assoc($q_klaster_all)){
-                ?>
-                    <option value="<?=$d_klaster_all['id'];?>" <?= $d_klaster['id'] == $d_klaster_all['id'] ? 'selected' : '' ?>><?=$d_klaster_all['klaster'];?></option>
-                <? } ?>
-            </select>
-		</div>
-
-
-        <div class="col-md-6 mb-3">
-            Tujuan Asesmen <span class="text-danger">*</span>
-            <select name="tujuan_asesmen" id="tujuan_asesmen" class="form-control" required <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
-                <option value="">PILIH</option>
-                <option value="Sertifikasi" <?= $data_apl01['tujuan_asesmen'] == 'Sertifikasi' ? 'selected' : '' ?>>Sertifikasi</option>
-                <option value="Sertifikasi Ulang" <?= $data_apl01['tujuan_asesmen'] == 'Sertifikasi Ulang' ? 'selected' : '' ?>>Sertifikasi Ulang</option>
-                <option value="Pengakuan Kompetensi Terkini (PKT)" <?= $data_apl01['tujuan_asesmen'] == 'Pengakuan Kompetensi Terkini (PKT)' ? 'selected' : '' ?>>Pengakuan Kompetensi Terkini (PKT)</option>
-                <option value="Rekognisi Pembelajaran Lampau" <?= $data_apl01['tujuan_asesmen'] == 'Rekognisi Pembelajaran Lampau' ? 'selected' : '' ?>>Rekognisi Pembelajaran Lampau</option>
-                <option value="Lainnya" <?= $data_apl01['tujuan_asesmen'] == 'Lainnya' ? 'selected' : '' ?>>Lainnya</option>
-            </select>
-        </div>
-
-        <div class="col-md-6 mb-3">
-            Tanggal Pengajuan
-            <input type="date" class="form-control"
-                   value="<?= $data_apl01 ? $data_apl01['tgl_pengajuan'] : date('Y-m-d');?>"
-                   <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
-        </div>
-    </div>
-
+    
     <!-- ================= DATA ASESI ================= -->
-    <hr>
+    
     <h5>Data Pribadi Asesi</h5>
-
     <?
     if($data_apl01) {
         $q_dprib = mysqli_query($conn,"
@@ -197,6 +137,66 @@ if ($sub == "") {
 		</div>
 	</div>
 
+    <!-- ================= INFORMASI PENGAJUAN ================= -->
+    <hr>
+    <h5>Informasi Pengajuan</h5>
+    <div class="row">
+
+        <?
+            $q_klaster = mysqli_query($conn,"
+                SELECT *
+                FROM sk_skema_klaster
+                WHERE id = '".$data_apl01['id_klaster']."'
+                LIMIT 1");
+            $d_klaster = mysqli_fetch_assoc($q_klaster);
+        ?>
+        <div class="col-md-6 mb-3">
+            Skema Sertifikasi <span class="text-danger">*</span>
+            <select id="select_skema" name="id_skema" class="form-control" required <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?> >
+                <option value="">PILIH</option>
+                <?
+                    $q_skema = mysqli_query($conn,"SELECT * FROM sk_skema WHERE id_lsp='".$_SESSION['id_lsp']."' ORDER BY skema ASC");
+                    while($s = mysqli_fetch_assoc($q_skema)){
+                ?>
+                    <option value="<?=$s['id'];?>" <?= $d_klaster['id_skema_sertifikasi'] == $s['id'] ? 'selected' : '' ?>><?=$s['skema'];?></option>
+                <? } ?>
+            </select>
+        </div>
+
+		<div class="col-md-6 mb-3">
+			Klaster <span class="text-danger">*</span>
+			<select class="form-control" name="id_klaster" id="select_klaster" required <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
+                <option value="">Silahkan Pilih Skema Terlebih Dahulu</option>
+                <?
+                    $q_klaster_all = mysqli_query($conn,"SELECT * FROM sk_skema_klaster WHERE id_skema_sertifikasi = '".$d_klaster['id_skema_sertifikasi']."'");
+                    while($d_klaster_all = mysqli_fetch_assoc($q_klaster_all)){
+                ?>
+                    <option value="<?=$d_klaster_all['id'];?>" <?= $d_klaster['id'] == $d_klaster_all['id'] ? 'selected' : '' ?>><?=$d_klaster_all['klaster'];?></option>
+                <? } ?>
+            </select>
+		</div>
+
+
+        <div class="col-md-6 mb-3">
+            Tujuan Asesmen <span class="text-danger">*</span>
+            <select name="tujuan_asesmen" id="tujuan_asesmen" class="form-control" required <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
+                <option value="">PILIH</option>
+                <option value="Sertifikasi" <?= $data_apl01['tujuan_asesmen'] == 'Sertifikasi' ? 'selected' : '' ?>>Sertifikasi</option>
+                <option value="Sertifikasi Ulang" <?= $data_apl01['tujuan_asesmen'] == 'Sertifikasi Ulang' ? 'selected' : '' ?>>Sertifikasi Ulang</option>
+                <option value="Pengakuan Kompetensi Terkini (PKT)" <?= $data_apl01['tujuan_asesmen'] == 'Pengakuan Kompetensi Terkini (PKT)' ? 'selected' : '' ?>>Pengakuan Kompetensi Terkini (PKT)</option>
+                <option value="Rekognisi Pembelajaran Lampau" <?= $data_apl01['tujuan_asesmen'] == 'Rekognisi Pembelajaran Lampau' ? 'selected' : '' ?>>Rekognisi Pembelajaran Lampau</option>
+                <option value="Lainnya" <?= $data_apl01['tujuan_asesmen'] == 'Lainnya' ? 'selected' : '' ?>>Lainnya</option>
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            Tanggal Pengajuan
+            <input type="date" class="form-control"
+                   value="<?= $data_apl01 ? $data_apl01['tgl_pengajuan'] : date('Y-m-d');?>"
+                   <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
+        </div>
+    </div>
+
     <!-- ================= PERSYARATAN ================= -->
     <hr>
     <h5>Persyaratan</h5>
@@ -218,6 +218,45 @@ if ($sub == "") {
         }
         ?>
     </div>
+
+    <hr>
+    <h5>Unit Kompetensi</h5>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Kode Unit</th>
+                <th>Unit Kompetensi</th>
+            </tr>
+        </thead>
+        <tbody id="uk-wrapper">
+            <?
+            if($d_klaster['id']) {
+                $q_uk = mysqli_query($conn,"
+                    SELECT * FROM sk_skema_uk
+                    WHERE id_klaster = '".$d_klaster['id']."'
+                    ORDER BY kode ASC
+                ");
+
+                while($d_uk = mysqli_fetch_assoc($q_uk)){
+                    ?>
+                    <tr>
+                        <td><?= $d_uk['kode']; ?></td>
+                        <td><?= $d_uk['unit_kompetensi']; ?></td>
+                    </tr>
+                    <?
+                }
+            } else {
+            ?>
+                <tr>
+                    <td colspan="2" class="text-center">
+                        <i class="text-muted">Data Tidak Ditemukan</i>
+                    </td>
+                </tr>
+            <?
+            }
+            ?>
+        </tbody>
+    </table>
 
     <!-- ================= BUKTI PENDUKUNG ================= -->
     <hr>
@@ -256,15 +295,20 @@ if ($sub == "") {
                             <? } ?>
                         </td>
 
+                        <? if($isAsessi) { ?>
                         <td class="text-center">
                             <button type="button"
-                                    class="btn btn-danger btn-remove-bukti" <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
+                                    class="btn btn-danger btn-remove-bukti" <?= $canEdit ? '' : 'disabled' ?>>
                                 &times;
                             </button>
                         </td>
+                        <? } ?>
                     </tr>
                 <? } ?>
             <? } ?>
+            <?
+            if (empty($bukti_lama)) {
+            ?>
             <tr class="bukti-item">
                 <td>
                     <input type="text"
@@ -275,22 +319,32 @@ if ($sub == "") {
                 <td>
                     <input type="file"
                         name="file_bukti_persyaratan[]"
+                        accept="application/pdf"
                         class="form-control" required <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
                 </td>
+                <? if($isAsessi) { ?>
                 <td class="text-center">
                     <button type="button"
-                            class="btn btn-danger btn-remove-bukti" <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
+                            class="btn btn-danger btn-remove-bukti" <?= $canEdit ? '' : 'disabled' ?>>
                         &times;
                     </button>
                 </td>
+                <? } ?>
             </tr>
+            <? } ?>
         </tbody>
     </table>
 
 
-    <button type="button" class="btn btn-secondary btn-sm mb-3" id="btn-add-bukti" <?= $isAsessi ? ($canEdit ? '' : 'disabled') : 'disabled' ?>>
-        <i class="fa fa-plus"></i> Tambah Bukti
-    </button>
+    <?
+    if($isAsessi) {
+    ?>
+        <button type="button" class="btn btn-secondary btn-sm mb-3" id="btn-add-bukti" <?= $canEdit ? '' : 'disabled' ?>>
+            <i class="fa fa-plus"></i> Tambah Bukti
+        </button>
+    <?
+    }
+    ?>
 
     <!-- ================= SUBMIT ================= -->
      <?
@@ -367,12 +421,54 @@ function loadKlaster(id) {
 	});
 }
 
+function loadUK(id) {
+    const idKlaster = id;
+
+    const uk = $('#uk-wrapper');
+
+    $.ajax({
+		url: "<?= $_SESSION['domain']; ?>/proses",
+		type: "GET",
+		dataType: "json",
+		data: {
+			mod: "apl-01",
+			act: "load-uk",
+			id_klaster: idKlaster
+		},
+		success: function (res) {
+
+			let html = '';
+
+			if (res.length === 0) {
+				html = '<tr><td colspan="2" class="text-center">Data Tidak Ditemukan</td></tr>';
+			} else {
+				$.each(res, function (i, k) {
+					html += `
+                        <tr>
+                            <td>${k.kode}</td>
+                            <td>${k.unit_kompetensi}</td>
+                        </tr>
+                    `;
+				});
+			}
+
+			uk.html(html);
+		},
+		error: function () {
+			swal("Error", "Gagal memuat unit kompetensi", "error");
+			uk.html('<tr><td colspan="2" class="text-center">Error</td></tr>');
+		}
+	});
+}
+
 $('#select_skema').on('change', function () {
 	loadKlaster($(this).val());
 });
 
  $('#select_klaster').on('change', function () {
 	const idKlaster = $(this).val();
+
+    loadUK(idKlaster);
 
 	if (idKlaster === '') {
 		$('#persyaratan-wrapper').html(
@@ -431,6 +527,7 @@ $('#btn-add-bukti').on('click', function(){
             <td>
                 <input type="file"
                         name="file_bukti_persyaratan[]"
+                        accept="application/pdf"
                         class="form-control" required>
             </td>
             <td class="text-center">
@@ -444,10 +541,6 @@ $('#btn-add-bukti').on('click', function(){
 });
 
 $('#bukti-wrapper').on('click','.btn-remove-bukti',function(){
-    $(this).closest('tr').remove();
-});
-
-$(document).on('click', '.btn-remove-bukti', function () {
     $(this).closest('tr').remove();
 });
 </script>
